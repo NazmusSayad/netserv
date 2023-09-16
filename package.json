@@ -1,5 +1,5 @@
 {
-  "name": "serve-dir",
+  "name": "netserv",
   "version": "1.0.0",
   "bin": "./dist/bin.ts",
   "scripts": {
