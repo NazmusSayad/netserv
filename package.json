@@ -1,7 +1,7 @@
 {
   "name": "netserv",
-  "version": "1.0.0",
-  "bin": "./dist/bin.ts",
+  "version": "1.0.1",
+  "bin": "./dist/bin.js",
   "scripts": {
     "build": "tsc",
     "tsc": "tsc -w",
