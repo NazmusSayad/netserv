@@ -1,10 +1,9 @@
-import * as path from 'path'
 import express from 'express'
 import listen from './listen'
-import { getPort, logger } from './utils'
+import { getDir, getPort, logger } from './utils'
 import serveIndex from 'serve-index'
 
-const root = path.resolve(process.argv[2] || process.cwd())
+const root = getDir(process.argv, process.cwd())
 const port = getPort(process.argv, 80)
 
 const app = express()
