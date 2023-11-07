@@ -12,12 +12,13 @@ app.use(
   express.static(root),
   serveIndex(root, {
     icons: true,
-    view: 'details',
+    // view: 'details',
   })
 )
 
-console.clear()
+// console.clear()
 listen(app, port).then(() => {
+  console.log(root)
   console.log()
   console.log('\x1b[32m\x1b[1mRoot:\x1b[0m', '\x1b[32m' + root, '\x1b[0m')
   console.log()

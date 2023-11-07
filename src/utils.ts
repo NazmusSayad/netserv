@@ -23,9 +23,8 @@ export const logger = morgan(function (tokens, req, res) {
 })
 
 export function getDir(args: string[], fallback: string) {
-  const portFlag = args.indexOf('--dir')
-  const dir = args[portFlag + 1]
-  return dir ?? fallback
+  const dirIndex = args.indexOf('--dir')
+  return dirIndex > 0 ? args[dirIndex + 1] : fallback
 }
 
 export function getPort(args: string[], fallback: number) {
