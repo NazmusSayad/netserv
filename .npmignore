@@ -1,0 +1,5 @@
+*
+!dist-app/**
+!dist-server/**
+!package.json
+!README.md
