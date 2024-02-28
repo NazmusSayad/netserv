@@ -49,7 +49,7 @@ export function getInfoFactoryController(basePath: string) {
   }
 
   return async (req: Request, res: Response) => {
-    const currentPath = path.join(basePath, req.url)
+    const currentPath = path.join(basePath, decodeURI(req.url))
     if (!fs.existsSync(currentPath)) {
       return res.status(404).json({
         error: 'File not found!',
