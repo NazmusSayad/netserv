@@ -4,8 +4,8 @@ import Express from 'express'
 import NoArg, { t } from 'noarg'
 
 import app from './express'
-import address from './address'
 import { getInfoFactoryController } from './controller'
+import { networkInterfaces } from 'os'
 
 const arg = new NoArg(
   'app',
@@ -18,11 +18,12 @@ const arg = new NoArg(
     },
 
     options: {
-      port: t.number().default(80).description('Port to start the server'),
-      host: t
-        .string()
-        .default(address())
-        .description('Host to start the server'),
+      host: t.string().description('Server host'),
+      port: t.number().description('Server port').default(80),
+      addresses: t
+        .array(t.string())
+        .aliases('a')
+        .description('A list of server addresses to listen'),
     },
   },
 
@@ -49,16 +50,36 @@ const arg = new NoArg(
 
     app.use((_, res) => res.redirect('/@'))
 
-    app.listen(options.port, options.host, async () => {
-      const url = `http://${options.host}:${options.port}`
-      const result = await qrcode.toString(url, {
-        type: 'terminal',
-        small: true,
-      })
+    function listen(name: string, port: number, host: string) {
+      app.listen(port, host, async () => {
+        const url = `http://${host}:${port}`
+        const result = await qrcode.toString(url, {
+          type: 'terminal',
+          small: true,
+        })
 
-      console.log(`Server started: ${url}\n`)
-      console.log(result)
-    })
+        console.log(
+          `${'\x1b[0m\x1b[34m\x1b[1m'}Server name: \x1b[0m\x1b[34m${name}\x1b[0m`
+        )
+        console.log(`Address: \x1b[32m${url}\x1b[0m`)
+        console.log(result)
+      })
+    }
+
+    if (options.addresses) {
+      options.addresses.forEach((address) => {
+        const [host, port] = address.split(':')
+        listen('Custom Address', Number(port), host)
+      })
+    } else if (options.host) {
+      listen('Custom Host', options.port, options.host)
+    } else {
+      const networkEntries = Object.entries(networkInterfaces()).reverse()
+      for (const [key, addresses] of networkEntries) {
+        const ipv4 = addresses?.find((x) => x.family === 'IPv4')
+        ipv4 && listen(key, options.port, ipv4?.address)
+      }
+    }
   }
 )
 
