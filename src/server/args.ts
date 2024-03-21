@@ -6,6 +6,10 @@ import NoArg, { t } from 'noarg'
 import app from './express'
 import { getInfoFactoryController } from './controller'
 import { networkInterfaces } from 'os'
+import multer from 'multer'
+
+const apiRouter = Express.Router()
+const formDataUpload = multer({ storage: multer.memoryStorage() })
 
 const arg = new NoArg(
   'app',
@@ -29,8 +33,14 @@ const arg = new NoArg(
 
   ([src], options) => {
     const root = path.resolve(src ?? '.')
+    const baseController = getInfoFactoryController(root)
 
-    app.use('/api', getInfoFactoryController(root))
+    // Server API
+    apiRouter.post('*', formDataUpload.any(), baseController.post)
+    apiRouter.get('*', baseController.get)
+    app.use('/api', apiRouter)
+
+    // Serve static files
     app.use(
       '/drive',
       Express.static(root, {
@@ -39,6 +49,7 @@ const arg = new NoArg(
       })
     )
 
+    // Serve frontend
     app.use(
       '/@',
       Express.static(path.join(__dirname, '../../public')),

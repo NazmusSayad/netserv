@@ -1,23 +1,24 @@
 import usePathJoin from '@/hooks/usePathJoin'
 import { DirResponse } from '@/types/data'
 import { Link } from 'react-router-dom'
+import css from './ContentDir.module.scss'
 
 export default function ContentDir({ dir }: { dir: DirResponse }) {
   const join = usePathJoin()
 
   return (
-    <div>
+    <ul className={css.contentList}>
       {dir.directories.map((name, i) => (
-        <div key={name + i}>
+        <li key={name + i}>
           <Link to={join(name)}>📁{name}</Link>
-        </div>
+        </li>
       ))}
 
       {dir.files.map((file, i) => (
-        <div key={file.name + i}>
+        <li key={file.name + i}>
           <Link to={join(file.name)}>📝{file.name}</Link>
-        </div>
+        </li>
       ))}
-    </div>
+    </ul>
   )
 }

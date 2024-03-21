@@ -1,6 +1,7 @@
+import { Suspense } from 'react'
 import NavBar from './components/NavBar'
 import Content from './components/Content'
-import { Suspense } from 'react'
+import Upload from './components/Upload'
 
 const App = () => {
   return (
@@ -9,6 +10,7 @@ const App = () => {
       <Suspense fallback={<h1>Loading.......</h1>}>
         <Content />
       </Suspense>
+      <Upload />
     </>
   )
 }
