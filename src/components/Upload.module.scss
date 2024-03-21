@@ -28,7 +28,8 @@
   .backdrop {
     position: absolute;
     inset: 0;
-    background: red;
+    background: clr(0, 0.5);
+    backdrop-filter: blur(0.5rem);
     z-index: -1;
   }
 
@@ -38,6 +39,8 @@
 
   .content {
     background-color: clr(1);
+    border-radius: 1rem;
+    box-shadow: 0 0 1rem 0.5rem clr(3, 0.075);
     position: absolute;
     inset: 0;
     max-width: 60rem;
@@ -60,6 +63,20 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .header {
+    button {
+      border: none;
+      background-color: transparent;
+      padding: 0.75rem;
+    }
+
+    svg {
+      width: 2.25rem;
+      height: 2.25rem;
+      fill: clr(red, 0.85);
+    }
   }
 
   .body {

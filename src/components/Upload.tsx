@@ -69,7 +69,9 @@ export default function Upload() {
           <div className={css.header}>
             <div className={css.wrapper}>
               <h2>Upload</h2>
-              <button onClick={() => setIsModalVisible(false)}>Close</button>
+              <button onClick={() => setIsModalVisible(false)}>
+                <CrossIcon />
+              </button>
             </div>
           </div>
 
