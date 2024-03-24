@@ -1,6 +1,6 @@
 import usePathJoin from '@/hooks/usePathJoin'
 import { DirResponse } from '@/types/data'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import css from './ContentDir.module.scss'
 import TrashIcon from '@/assets/icons/trash.svg'
 import { useApi } from '@/api/react'
@@ -9,6 +9,7 @@ import { bytesToAutoUnit } from '@/utils'
 export default function ContentDir({ dir }: { dir: DirResponse }) {
   const api = useApi()
   const join = usePathJoin()
+  const location = useLocation()
   const navigate = useNavigate()
 
   async function deleteFile(path: string, type: 'file' | 'dir') {
@@ -20,7 +21,7 @@ export default function ContentDir({ dir }: { dir: DirResponse }) {
       return
 
     await api.delete(path)
-    navigate('.', { state: {} })
+    navigate(location.pathname, { state: {} })
   }
 
   return (
