@@ -1,6 +1,6 @@
 {
   "name": "netserv",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "type": "commonjs",
   "bin": "./dist-server/server/index.js",
   "scripts": {
