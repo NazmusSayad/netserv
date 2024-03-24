@@ -84,7 +84,7 @@ export function getInfoFactoryController(basePath: string) {
 
     async delete(req: Request, res: Response) {
       const currentPath = path.join(basePath, decodeURI(req.url))
-      fs.unlinkSync(currentPath)
+      fs.rmSync(currentPath, { force: true, recursive: true })
       res.json({ message: 'File deleted successfully!' })
     },
   }
