@@ -3,18 +3,24 @@ import css from './Upload.module.scss'
 import UploadIcon from '@/assets/icons/upload.svg'
 import CrossIcon from '@/assets/icons/cross.svg'
 import { useApi } from '@/api/react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate, useNavigation } from 'react-router-dom'
+import { bytesToAutoUnit } from '@/utils'
 
 export default function Upload() {
   const api = useApi()
   const location = useLocation()
+  const navigate = useNavigate()
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [fileMap, setFileMap] = useState<Record<string, File>>({})
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
     if (isModalVisible) dialogRef.current!.showModal()
-    else dialogRef.current!.close()
+    else {
+      dialogRef.current!.close()
+      navigate(location.pathname, { state: {} })
+      setFileMap({})
+    }
   }, [isModalVisible])
 
   function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -49,27 +55,28 @@ export default function Upload() {
       formData.append(key, file)
     }
 
-    const result = await api.post(location.pathname, formData)
-    console.log(result)
+    await api.post(location.pathname, formData)
+    toggleModal(false)
+  }
+
+  function toggleModal(state?: boolean) {
+    setIsModalVisible(state ? state : (visible) => !visible)
   }
 
   return (
     <>
       <button className={css.Upload}>
-        <UploadIcon onClick={() => setIsModalVisible((b) => !b)} />
+        <UploadIcon onClick={() => toggleModal()} />
       </button>
 
       <dialog ref={dialogRef} className={css.Dialog}>
-        <div
-          className={css.backdrop}
-          onClick={() => setIsModalVisible(false)}
-        />
+        <div className={css.backdrop} onClick={() => toggleModal(false)} />
 
         <div className={css.content}>
           <div className={css.header}>
             <div className={css.wrapper}>
               <h2>Upload</h2>
-              <button onClick={() => setIsModalVisible(false)}>
+              <button onClick={() => toggleModal(false)}>
                 <CrossIcon />
               </button>
             </div>
@@ -163,6 +170,15 @@ function FilesList({
             <div className={css.liFile}>
               <div className={css.text}>
                 <span>{key}</span>
+                <span className={css.textFileSize}>
+                  Total:{' '}
+                  {bytesToAutoUnit(
+                    Object.values(fileMap).reduce(
+                      (acc, file) => acc + file.size,
+                      0
+                    )
+                  )}
+                </span>
               </div>
 
               <button
@@ -194,7 +210,9 @@ function FilesList({
             <div className={css.liFile}>
               <div className={css.text}>
                 <span>{key}</span>
-                <span className={css.textSize}>{file.size} bytes</span>
+                <span className={css.textFileSize}>
+                  {bytesToAutoUnit(file.size)}
+                </span>
               </div>
 
               <button

@@ -11,9 +11,9 @@ export default function ContentFile({ file }: { file: FileResponse }) {
   return (
     <div>
       <div className={css.header}>
-        <div>
+        <div className={css.fileHeaderText}>
           <h3>{file.name}</h3>
-          <p>Size: {bytesToAutoUnit(file.size)}</p>
+          <p className={css.textFileSize}>({bytesToAutoUnit(file.size)})</p>
         </div>
 
         <div>
@@ -59,6 +59,9 @@ function VideoPreview({ src }: { src: string }) {
   return <video className={css.previewVideo} src={src} controls />
 }
 
+import SyntaxHighlighter from 'react-syntax-highlighter'
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+
 function TextPreview({ src }: { src: string }) {
   const [text, setText] = useState('')
 
@@ -68,7 +71,14 @@ function TextPreview({ src }: { src: string }) {
       .then((text) => setText(text))
   }, [])
 
-  return <pre className={css.previewText}>{text}</pre>
+  return (
+    <SyntaxHighlighter
+      style={atomOneDark}
+      language={src.match(/[^.]+$/)?.[0]?.toLowerCase()}
+    >
+      {text}
+    </SyntaxHighlighter>
+  )
 }
 
 const Ext = {

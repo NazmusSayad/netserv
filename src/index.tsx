@@ -1,7 +1,7 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import { createRoot } from 'react-dom/client'
-import { HashRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import ErrorBoundary from 'error-boundary-react'
 
 import 'css-reset-plus'
@@ -16,9 +16,9 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <ErrorBoundary fallback={<h1>Error</h1>}>
-        <HashRouter>
+        <BrowserRouter basename={'@'}>
           <App />
-        </HashRouter>
+        </BrowserRouter>
       </ErrorBoundary>
     </Provider>
   </React.StrictMode>

@@ -36,8 +36,9 @@ const arg = new NoArg(
     const baseController = getInfoFactoryController(root)
 
     // Server API
-    apiRouter.post('*', formDataUpload.any(), baseController.post)
     apiRouter.get('*', baseController.get)
+    apiRouter.delete('*', baseController.delete)
+    apiRouter.post('*', formDataUpload.any(), baseController.post)
     app.use('/api', apiRouter)
 
     // Serve static files

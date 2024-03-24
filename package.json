@@ -1,10 +1,9 @@
 {
   "name": "netserv",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "type": "commonjs",
   "bin": "./dist-server/server/index.js",
   "scripts": {
-    "_dev": "npm-run-all --parallel dev:*",
     "dev:vite": "vite --host",
     "dev:serve": "nodemon --exec \"ts-node --project tsconfig.server.json -r tsconfig-paths/register ./src/server/index.ts\"",
     "tsc": "tsc --watch",
@@ -19,7 +18,8 @@
     "module-alias": "^2.2.3",
     "multer": "^1.4.5-lts.1",
     "noarg": "^0.0.11",
-    "qrcode": "^1.5.3"
+    "qrcode": "^1.5.3",
+    "react-syntax-highlighter": "^15.5.0"
   },
   "devDependencies": {
     "@reduxjs/toolkit": "^2.1.0",
@@ -31,6 +31,7 @@
     "@types/qrcode-terminal": "^0.12.2",
     "@types/react": "^18.2.51",
     "@types/react-dom": "^18.2.18",
+    "@types/react-syntax-highlighter": "^15.5.11",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitejs/plugin-react-swc": "^3.6.0",
     "css-reset-plus": "^1.0.4",

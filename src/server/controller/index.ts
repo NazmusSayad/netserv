@@ -50,27 +50,27 @@ export function getInfoFactoryController(basePath: string) {
 
   return {
     async get(req: Request, res: Response) {
-      const currentDir = path.join(basePath, decodeURI(req.url))
-      if (!fs.existsSync(currentDir)) {
+      const currentPath = path.join(basePath, decodeURI(req.url))
+      if (!fs.existsSync(currentPath)) {
         return res.status(404).json({
           error: 'File not found!',
         })
       }
 
-      const type = fs.statSync(currentDir).isDirectory() ? 'dir' : 'file'
+      const type = fs.statSync(currentPath).isDirectory() ? 'dir' : 'file'
       const info =
-        type === 'dir' ? getDirInfo(currentDir) : getFileInfo(currentDir)
+        type === 'dir' ? getDirInfo(currentPath) : getFileInfo(currentPath)
       res.json({ type, ...info })
     },
 
     async post(req: Request, res: Response) {
-      const currentDir = path.join(basePath, decodeURI(req.url))
+      const currentPath = path.join(basePath, decodeURI(req.url))
       const formDataFiles = [
         ...((req.files ?? []) as unknown as Express.Multer.File[]),
       ]
 
       for (const element of formDataFiles) {
-        const filePath = path.join(currentDir, element.fieldname)
+        const filePath = path.join(currentPath, element.fieldname)
         const fileDirName = path.dirname(filePath)
         if (!fs.existsSync(fileDirName)) {
           fs.mkdirSync(fileDirName, { recursive: true })
@@ -80,6 +80,12 @@ export function getInfoFactoryController(basePath: string) {
       }
 
       res.json({ message: 'File uploaded successfully!' })
+    },
+
+    async delete(req: Request, res: Response) {
+      const currentPath = path.join(basePath, decodeURI(req.url))
+      fs.unlinkSync(currentPath)
+      res.json({ message: 'File deleted successfully!' })
     },
   }
 }

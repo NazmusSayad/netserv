@@ -38,7 +38,7 @@ function useLocationData() {
     api.get(location.pathname).then(({ data, ok }) => {
       setState(data)
     })
-  }, [location.pathname])
+  }, [location.pathname, location.state])
 
   return state as ApiResponse | undefined
 }
