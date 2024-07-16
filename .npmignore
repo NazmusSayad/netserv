@@ -1,5 +1,6 @@
+# npmize
 *
-!dist-app/**
-!dist-server/**
+!lib/**
+!dist/**
 !package.json
 !README.md
