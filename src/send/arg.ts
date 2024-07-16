@@ -1,8 +1,8 @@
 import { t } from 'noarg'
-import app from '../arg'
+import arg from '../arg'
 import send from '.'
 
-app.create(
+arg.create(
   'send',
   {
     description: 'This sends file to the server',
