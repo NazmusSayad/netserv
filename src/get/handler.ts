@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as busboy from 'busboy'
 import { Request, Response } from 'express'
-import { GetConfig } from './index'
+import { GetConfig } from './server-starter'
 import ProgressBar from '../utils/progress-bar'
 
 export function upload(config: GetConfig) {
