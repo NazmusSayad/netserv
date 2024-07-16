@@ -1,6 +1,6 @@
 import { t } from 'noarg'
-import app from './app'
-import get from '../get'
+import app from '../arg'
+import get from '.'
 
 app.create(
   'get',
