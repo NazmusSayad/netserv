@@ -1,0 +1,137 @@
+.Upload {
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+  z-index: 1000;
+  border: transparent;
+  border-radius: 50%;
+  background-color: clr(blue, 0.5);
+  width: 5rem;
+  height: 5rem;
+  padding: 1.25rem;
+
+  svg path {
+    fill: white;
+  }
+}
+
+.Dialog {
+  width: 100%;
+  height: 100%;
+  background: none;
+  border: none;
+
+  ::backdrop {
+    display: none;
+  }
+
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    background: clr(0, 0.5);
+    backdrop-filter: blur(0.5rem);
+    z-index: -1;
+  }
+
+  .wrapper {
+    padding-inline: 3rem;
+  }
+
+  .content {
+    background-color: clr(1);
+    border-radius: 1rem;
+    box-shadow: 0 0 1rem 0.5rem clr(3, 0.075);
+    position: absolute;
+    inset: 0;
+    max-width: 60rem;
+    max-height: 95%;
+    width: 95%;
+    margin: auto;
+    display: grid;
+    grid-auto-rows: auto 1fr auto;
+
+    @include max(600px) {
+      width: 100%;
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+
+  .header .wrapper,
+  .footer .wrapper {
+    padding-block: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header {
+    button {
+      border: none;
+      background-color: transparent;
+      padding: 0.75rem;
+    }
+
+    svg {
+      width: 2.25rem;
+      height: 2.25rem;
+      fill: clr(red, 0.85);
+    }
+  }
+
+  .body {
+    max-height: 100%;
+    overflow: hidden;
+  }
+
+  .body .wrapper {
+    overflow-y: auto;
+    display: grid;
+    height: 100%;
+    border-block: 1px solid clr(blue, 0.1);
+    padding-block: 1.5rem;
+  }
+
+  .filesList {
+    li {
+      background-color: clr(blue, 0.02);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .liFile {
+      display: grid;
+      grid-auto-flow: column;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 1rem;
+
+      .text {
+        word-break: break-all;
+      }
+
+      .textFileSize {
+        font-size: 1.2rem;
+        color: clr(blue, 0.5);
+        margin-left: 0.5rem;
+      }
+
+      .removeBtn {
+        border: none;
+        background: none;
+
+        svg {
+          width: 1em;
+          fill: firebrick;
+        }
+      }
+    }
+  }
+
+  .contentSelectBtnGroup {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 1rem;
+  }
+}

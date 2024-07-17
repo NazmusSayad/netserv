@@ -2,5 +2,6 @@
 *
 !lib/**
 !dist/**
+!dist-web/**
 !package.json
 !README.md
