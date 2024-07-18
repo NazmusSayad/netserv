@@ -1,18 +1,19 @@
-import { Suspense } from 'react'
-import NavBar from './components/NavBar'
-import Content from './components/Content'
-import Upload from './components/Upload'
+import { Button, Typography } from '@mui/material'
 
-const App = () => {
+const SimpleComponent = () => {
   return (
     <>
-      <NavBar />
-      <Suspense fallback={<h1>Loading.......</h1>}>
-        <Content />
-      </Suspense>
-      <Upload />
+      <Typography variant="h4" gutterBottom>
+        Welcome to My Simple Component
+      </Typography>
+      <Typography variant="body1" paragraph>
+        This is a basic example of a Material-UI component.
+      </Typography>
+      <Button variant="contained" color="primary">
+        Click Me
+      </Button>
     </>
   )
 }
 
-export default App
+export default SimpleComponent

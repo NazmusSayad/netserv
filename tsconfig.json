@@ -10,5 +10,5 @@
     "removeComments": true,
     "moduleResolution": "node"
   },
-  "include": ["./src", "./declarations.d.ts"]
+  "include": ["./src", "web/declarations.d.ts"]
 }

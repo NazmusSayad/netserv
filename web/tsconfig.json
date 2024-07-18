@@ -2,13 +2,13 @@
   "compilerOptions": {
     "composite": true,
     "target": "ES2020",
-    "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
+    "esModuleInterop": true,
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -18,12 +18,13 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
 
-    "paths": { "@/*": ["./*"] }
+    /* Other */
+    "baseUrl": ".",
+    "paths": { "@/*": ["./*"] },
+    "tsBuildInfoFile": "../node_modules/.tmp/tsconfig.app.tsbuildinfo"
   },
-  "include": ["./"]
+  "include": ["./", "./declarations.d.ts"]
 }

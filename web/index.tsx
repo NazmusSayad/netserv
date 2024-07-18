@@ -4,12 +4,9 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import ErrorBoundary from 'error-boundary-react'
 
-import 'css-reset-plus'
 import './styles/index.scss'
 import App from './App'
 import { store } from '@/store'
-
-import '@/'
 
 const rootElement = document.getElementById('Root')!
 const root = createRoot(rootElement)
