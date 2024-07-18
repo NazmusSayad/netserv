@@ -15,9 +15,6 @@
     "vite-build": "tsc -p ./web/tsconfig.json && vite build ./web --emptyOutDir"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
-    "@mui/material": "^5.16.4",
     "axios": "^1.7.2",
     "busboy": "^1.6.0",
     "cli-progress": "^3.12.0",
@@ -33,6 +30,11 @@
     "qrcode": "^1.5.3"
   },
   "devDependencies": {
+    "@emotion/react": "^11.11.4",
+    "@mui/styles": "^5.16.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.16.4",
+    "@mui/material": "^5.16.4",
     "@mui/types": "^7.2.15",
     "@reduxjs/toolkit": "^2.1.0",
     "@types/bunyan": "^1.8.11",
