@@ -1,6 +1,6 @@
-import Login from './features/Auth/Login'
 import { createTheme, ThemeProvider } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
+import Router from './Router'
 
 const theme = createTheme({
   palette: {
@@ -12,7 +12,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Login />
+      <Router />
     </ThemeProvider>
   )
 }

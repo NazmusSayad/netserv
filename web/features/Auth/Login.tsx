@@ -2,6 +2,7 @@ import { FormEvent, useState } from 'react'
 import css from './Login.module.scss'
 import { Button, Input, ButtonBase } from '@mui/material'
 import { actions } from '@/store'
+import { MdPerson } from 'react-icons/md'
 
 export default function Login() {
   const [isPassVisible, setIsPassVisible] = useState(false)
@@ -16,7 +17,9 @@ export default function Login() {
     <div className={css.CardContainer}>
       <div className={css.Card}>
         <form onSubmit={handleSubmit}>
-          <div className={css.logo} />
+          <div className={css.logo}>
+            <MdPerson />
+          </div>
 
           <div className={css.inputContainer}>
             <Input

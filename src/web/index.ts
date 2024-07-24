@@ -5,6 +5,7 @@ import * as express from 'express'
 import arg from '../arg'
 import app from './app'
 import * as qrcode from 'qrcode'
+import apiRouter from './api-router'
 
 const WEB_APP_DIR = path.join(__dirname, '../../dist-web')
 
@@ -23,14 +24,11 @@ arg.create(
     console.log({ options })
 
     app.get('/', (req, res, next) => {
-      res.set('Cache-Control', 'no-store')
       res.redirect('/@')
       next()
     })
 
-    app.use('/api', (req, res) => {
-      res.json({ hello: 'world!' })
-    })
+    app.use('/api', apiRouter)
 
     app.use(
       '/@',

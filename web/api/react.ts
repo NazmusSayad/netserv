@@ -1,6 +1,6 @@
 import ReactHTTP from 'react-net-kit'
 const url = (import.meta as any).env.DEV
-  ? 'http://192.168.0.100:80'
+  ? 'http://localhost:8000'
   : location.origin
 
 function getApiUrl() {
