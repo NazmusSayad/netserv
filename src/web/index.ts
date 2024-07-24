@@ -4,6 +4,8 @@ import arg from '../arg'
 import app from './app'
 import path = require('path')
 
+const WEB_APP_DIR = path.join(__dirname, '../../dist-web')
+
 arg.create(
   'web',
   {
@@ -17,11 +19,8 @@ arg.create(
   (_, options) => {
     console.log({ options })
 
-    app.use(
-      '/@',
-      express.static(path.join(__dirname, '../../dist-web'), {
-        cacheControl: false,
-      })
+    app.use('/@', express.static(WEB_APP_DIR), (_, res) =>
+      res.sendFile(path.join(WEB_APP_DIR, '/index.html'))
     )
 
     app.use((_, res) => res.redirect('/@'))
