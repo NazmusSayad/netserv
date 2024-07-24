@@ -1,13 +1,20 @@
-import { createStyles, makeStyles, DefaultTheme } from '@mui/styles'
 import Login from './features/Auth/Login'
+import { createTheme, ThemeProvider } from '@mui/material'
+import CssBaseline from '@mui/material/CssBaseline'
 
-const style = makeStyles({}, { defaultTheme: 'dark' })
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+})
 
 function App() {
-  return <Login />
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Login />
+    </ThemeProvider>
+  )
 }
 
-
-// @ts-ignore
-console.log(import.meta.env)
 export default App
