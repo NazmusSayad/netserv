@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import ErrorBoundary from 'error-boundary-react'
 import './styles/index.scss'
 
-import App from './app'
+import App from './App'
 import { store } from '@/store'
 
 const rootElement = document.getElementById('Root')!
