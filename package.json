@@ -11,7 +11,7 @@
     "ftp": "ts-node-dev --respawn --rs ./src/index.ts ftp",
     "get": "ts-node-dev --respawn --rs ./src/index.ts get",
     "send": "ts-node-dev --respawn --rs ./src/index.ts send 192.168.0.100 8000",
-    "vite-dev": "vite ./web",
+    "vite-dev": "vite ./web --host",
     "vite-build": "tsc -p ./web/tsconfig.json && vite build ./web --emptyOutDir"
   },
   "dependencies": {

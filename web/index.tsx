@@ -3,9 +3,9 @@ import { Provider } from 'react-redux'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import ErrorBoundary from 'error-boundary-react'
-
 import './styles/index.scss'
-import App from './App'
+
+import App from './app'
 import { store } from '@/store'
 
 const rootElement = document.getElementById('Root')!

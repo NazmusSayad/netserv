@@ -1,3 +1,13 @@
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
 html {
   scroll-behavior: smooth;
   color-scheme: dark;
@@ -6,13 +16,17 @@ html {
 
 body {
   font-family: sans-serif;
+  margin: 0;
 }
 
 #Root {
-  height: 100%;
-  min-height: 100%;
-  max-height: 100%;
   overflow-y: scroll;
+}
+
+html,
+body,
+#Root {
+  height: 100%;
 }
 
 a {

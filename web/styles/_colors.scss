@@ -12,7 +12,9 @@ $colors-map: (
 html {
   @include extractColors($colors-map);
   @include extractColors(listToMap($colors-list));
+}
 
+body {
   color: clr(5);
   background-color: clr(0);
 }
