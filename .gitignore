@@ -1,5 +1,5 @@
 # npmize
 node_modules
 dist
-dist-app
+dist-web
 .npmize

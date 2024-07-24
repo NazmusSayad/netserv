@@ -6,12 +6,7 @@ import arg from '../arg'
 import app from './app'
 import * as qrcode from 'qrcode'
 
-const WEB_APP_DIR = path.join(__dirname, '../../dist-app')
-
-const staticRouter = express.Router()
-staticRouter.use(express.static(WEB_APP_DIR), (_, res) =>
-  res.sendFile(path.join(WEB_APP_DIR, '/index.html'))
-)
+const WEB_APP_DIR = path.join(__dirname, '../../dist-web')
 
 arg.create(
   'web',
@@ -27,12 +22,24 @@ arg.create(
   (_, options) => {
     console.log({ options })
 
-    app.use('/@', staticRouter)
-    app.use('/', (_, res) => {
+    app.get('/', (req, res, next) => {
+      res.set('Cache-Control', 'no-store')
       res.redirect('/@')
-      console.log('Hello')
-      res.end()
+      next()
     })
+
+    app.use('/api', (req, res) => {
+      res.json({ hello: 'world!' })
+    })
+
+    app.use(
+      '/@',
+      (req, res, next) => {
+        next()
+      },
+      express.static(WEB_APP_DIR, { maxAge: 1 }),
+      (_, res) => res.sendFile(path.join(WEB_APP_DIR, '/index.html'))
+    )
 
     /***************************************
      ***** FANCY Listening... IGNORE!! *****
