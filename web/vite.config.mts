@@ -12,7 +12,7 @@ export default defineConfig({
   base: '/@',
 
   server: { host: 'localhost', port: 3000 },
-  build: { outDir: path.join(__dirname, '../dist-web') },
+  build: { outDir: path.join(__dirname, '../dist-app') },
   resolve: { alias: { '@': path.join(__dirname, './') } },
 
   plugins: [svgr({ include: '**/*.svg' }), react()],
