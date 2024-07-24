@@ -1,0 +1,39 @@
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  user-select: none;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+}
+
+#Root {
+  overflow-y: scroll;
+}
+
+html,
+body,
+#Root {
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
