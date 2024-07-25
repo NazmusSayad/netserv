@@ -3,14 +3,25 @@ import css from './Login.module.scss'
 import { Button, Input, ButtonBase } from '@mui/material'
 import { actions } from '@/store'
 import { MdPerson } from 'react-icons/md'
+import { useApi } from '@/api/react'
+import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
   const [isPassVisible, setIsPassVisible] = useState(false)
+  const navigate = useNavigate()
+  const api = useApi()
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     const password: string = e.target['password'].value
-    actions.auth.login(password)
+
+    const { ok, data } = await api.post('/auth/login', { password })
+    if (!ok) return
+
+    if (data.jwt) {
+      navigate('/')
+      actions.auth.login(data.jwt)
+    }
   }
 
   return (

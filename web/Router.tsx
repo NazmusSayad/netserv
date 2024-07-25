@@ -1,21 +1,34 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import Login from './features/Auth/Login'
-import { createSuspense } from './api/react'
+import { useStore } from './store'
+import Home from './features/Home'
 
-const useSuspense = createSuspense()
+export default function Router() {
+  const authEnabled = useStore((state) => state.auth.authEnabled)
+  return authEnabled ? <AuthEnabledRouter /> : <AuthDisabledRouter />
+}
 
-function Router() {
-  console.log('Hello')
-  
-  const result = useSuspense({ url: '/init' })
-  console.log(result)
+function AuthEnabledRouter() {
+  const jwt = useStore((state) => state.auth.jwt)
 
   return (
     <Routes>
-      <Route path="/" element={<h1>Hello</h1>} />
-      <Route path="/login" element={<Login />} />
+      {jwt ? (
+        <Route path="*" element={<Home />} />
+      ) : (
+        <>
+          <Route path="*" element={<Navigate to={'/login'} replace />} />
+          <Route path="/login" element={<Login />} />
+        </>
+      )}
     </Routes>
   )
 }
 
-export default Router
+function AuthDisabledRouter() {
+  return (
+    <Routes>
+      <Route path="*" element={<Home />} />
+    </Routes>
+  )
+}

@@ -1,4 +1,4 @@
-import * as os from 'os'
+import os = require('os')
 import { t } from 'noarg'
 import arg from '../arg'
 import server from './server'

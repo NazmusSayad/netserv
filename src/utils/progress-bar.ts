@@ -1,4 +1,4 @@
-import * as cliProgress from 'cli-progress'
+import cliProgress = require('cli-progress')
 
 export default function ProgressBar(totalSize: number) {
   const bar = new cliProgress.SingleBar({

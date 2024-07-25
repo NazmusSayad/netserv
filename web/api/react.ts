@@ -13,6 +13,8 @@ export function getDriveUrl(src: string) {
 
 const reactHTTP = ReactHTTP({
   baseURL: getApiUrl(),
+  withCredentials: true,
+
   formatData(res) {
     return res.data
   },

@@ -1,48 +1,33 @@
 import { t } from 'noarg'
-import * as os from 'os'
-import * as path from 'path'
-import * as express from 'express'
+import os = require('os')
+import qrcode = require('qrcode')
 import arg from '../arg'
-import app from './app'
-import * as qrcode from 'qrcode'
-import apiRouter from './api-router'
-
-const WEB_APP_DIR = path.join(__dirname, '../../dist-web')
+import app from './express'
+import { generateApp } from './app'
 
 arg.create(
   'web',
   {
     description: 'Creates a http server',
+    listArgument: {
+      name: 'Target Dir',
+      description: 'The directory to serve',
+      type: t.string(),
+      maxLength: 1,
+    },
     options: {
       host: t.string(),
-      root: t.string().default('.'),
       port: t.number().default(8000),
       password: t.string(),
       qr: t.boolean().default(true),
     },
   },
-  (_, options) => {
-    console.log({ options }, '\n')
+  ([root = '.'], options) => {
+    console.log({ root, options }, '\n')
+    options.password = 'pass'
 
-    app.get('/', (req, res, next) => {
-      res.redirect('/@')
-      next()
-    })
+    generateApp({ root, ...options })
 
-    app.use('/api', apiRouter)
-
-    app.use(
-      '/@',
-      (req, res, next) => {
-        next()
-      },
-      express.static(WEB_APP_DIR, { maxAge: 1 }),
-      (_, res) => res.sendFile(path.join(WEB_APP_DIR, '/index.html'))
-    )
-
-    /***************************************
-     ***** FANCY Listening... IGNORE!! *****
-     ***************************************/
     function listen(name: string, port: number, host: string) {
       app.listen(port, host, async () => {
         const url = `http://${host}:${port}`

@@ -1,6 +1,6 @@
 import axios from 'axios'
-import * as fs from 'fs'
-import * as FormData from 'form-data'
+import fs = require('fs')
+import FormData = require('form-data')
 import ProgressBar from '../utils/progress-bar'
 
 export type SendConfig = {

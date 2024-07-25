@@ -1,18 +1,15 @@
-import * as jwt from 'jsonwebtoken'
+import jwt = require('jsonwebtoken')
 
 const JWT_SECRET =
   Math.random().toString(36).substring(2, 15) +
   Math.random().toString(36).substring(2, 15) +
   Math.random().toString(36).substring(2, 15)
 
-type JWTPayload = {
-  ip: string
-  size: number
-}
+type JWTPayload = {}
 
 export const create = (payload: JWTPayload): string => {
   return jwt.sign({ payload }, JWT_SECRET, {
-    expiresIn: '3s',
+    expiresIn: '1d',
   })
 }
 

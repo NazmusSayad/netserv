@@ -1,7 +1,7 @@
-import * as fs from 'fs'
-import * as path from 'path'
-import * as express from 'express'
-import * as jwt from '../utils/jwt'
+import fs = require('fs')
+import path = require('path')
+import express = require('express')
+import * as jwt from './jwt'
 
 const app = express()
 const uploadDir = path.join(__dirname, 'uploads')
