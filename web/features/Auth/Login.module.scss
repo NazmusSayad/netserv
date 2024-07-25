@@ -37,6 +37,12 @@
   margin-bottom: 1rem;
 }
 
+.error {
+  color: clr(red);
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+}
+
 .passwordToggleVisible {
   border-radius: 50%;
   overflow: hidden;
