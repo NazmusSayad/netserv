@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite ./web --host",
     "tsc": "tsc --watch --noEmit",
-    "web": "nw ./src/index.ts web",
+    "web": "nw ./src/index.ts web --qr\\",
     "ftp": "nw ./src/index.ts ftp",
     "get": "nw ./src/index.ts get",
     "send": "nw ./src/index.ts send 192.168.0.100 8000",
@@ -15,6 +15,7 @@
   "dependencies": {
     "axios": "^1.7.2",
     "busboy": "^1.6.0",
+    "cli-node-env": "^1.0.1",
     "cli-progress": "^3.12.0",
     "cookie": "^0.6.0",
     "cookie-parser": "^1.4.6",
@@ -26,7 +27,7 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "noarg": "^1.0.2",
+    "noarg": "^1.0.3",
     "portfinder": "^1.0.32",
     "qrcode": "^1.5.3",
     "react-icons": "^5.2.1",

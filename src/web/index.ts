@@ -18,10 +18,11 @@ arg.create(
       root: t.string().default('.'),
       port: t.number().default(8000),
       password: t.string(),
+      qr: t.boolean().default(true),
     },
   },
   (_, options) => {
-    console.log({ options })
+    console.log({ options }, '\n')
 
     app.get('/', (req, res, next) => {
       res.redirect('/@')
@@ -53,11 +54,13 @@ arg.create(
         console.log(`URL: \x1b[32m${url}\x1b[0m`)
 
         // QR code output
-        const qrCodeText = await qrcode.toString(url, {
-          type: 'terminal',
-          small: true,
-        })
-        console.log(qrCodeText)
+        if (options.qr) {
+          const qrCodeText = await qrcode.toString(url, {
+            type: 'terminal',
+            small: true,
+          })
+          console.log(qrCodeText)
+        }
       })
     }
 
