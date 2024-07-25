@@ -4,15 +4,13 @@
   "type": "commonjs",
   "bin": "./dist/index.js",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "dev": "vite ./web --host",
     "tsc": "tsc --watch --noEmit",
-    "web": "ts-node-dev --respawn --rs ./src/index.ts web",
-    "ftp": "ts-node-dev --respawn --rs ./src/index.ts ftp",
-    "get": "ts-node-dev --respawn --rs ./src/index.ts get",
-    "send": "ts-node-dev --respawn --rs ./src/index.ts send 192.168.0.100 8000",
-    "vite-dev": "vite ./web --host",
-    "vite-build": "tsc -p ./web/tsconfig.json && vite build ./web --emptyOutDir"
+    "web": "nw ./src/index.ts web",
+    "ftp": "nw ./src/index.ts ftp",
+    "get": "nw ./src/index.ts get",
+    "send": "nw ./src/index.ts send 192.168.0.100 8000",
+    "build": "tsc && tsc -p ./web/tsconfig.json && vite build ./web --emptyOutDir"
   },
   "dependencies": {
     "axios": "^1.7.2",

@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-console.clear()
-
 import arg from './arg'
 
 import './get'
