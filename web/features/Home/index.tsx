@@ -1,25 +1,65 @@
+import { actions, useStore } from '@/store'
+import { useEffect, useRef } from 'react'
 import AddressBar from './AddressBar'
 import Content from './Content'
+import Wrapper from './Wrapper'
 import Header from './Header'
 
-const Home = (props) => {
+const Home = () => {
+  const wrapperPaddingWidth = useStore(
+    (state) => state.homeui.status.wrapperPaddingWidth
+  )
+
+  const parentRef = useRef<any>()
+  const childRef = useRef<any>()
+
+  useEffect(() => {
+    let debounceTimeoutNumber: NodeJS.Timeout
+    function handleWindowResize() {
+      const bothSizePadding =
+        parentRef.current.offsetWidth - childRef.current.offsetWidth
+
+      console.dir(parentRef.current.getBoundingClientRect())
+
+      const optimalPaddingWidth = bothSizePadding / 2
+      actions.homeui.setState({ wrapperPaddingWidth: optimalPaddingWidth })
+    }
+
+    function handleWindowResizeDebounce() {
+      clearTimeout(debounceTimeoutNumber)
+      debounceTimeoutNumber = setTimeout(handleWindowResize, 25)
+    }
+
+    handleWindowResizeDebounce()
+    window.addEventListener('resize', handleWindowResizeDebounce)
+    return () => {
+      clearTimeout(debounceTimeoutNumber)
+      window.removeEventListener('resize', handleWindowResizeDebounce)
+    }
+  }, [])
+
   return (
-    <div className="h-[inherit] grid auto-rows-[auto_1fr]">
+    <div ref={parentRef} className="h-[inherit] grid auto-rows-[auto_1fr]">
+      <style>{`:root { --abcdefghij-gap-size: ${wrapperPaddingWidth}px; }`}</style>
+
       <div className="bg-zinc-900">
-        <div className="max-w-3xl mx-auto py-1 px-2">
-          <Header />
-        </div>
+        <Wrapper>
+          <div ref={childRef}>
+            <Header />
+          </div>
+        </Wrapper>
+
         <hr className="opacity-25" />
-        <div className="max-w-3xl mx-auto py-1 px-2">
+
+        <Wrapper>
           <AddressBar />
-        </div>
+        </Wrapper>
+
         <hr className="opacity-25" />
       </div>
 
-      <div className="bg-zinc-800">
-        <div className="max-w-3xl mx-auto py-1 px-2">
-          <Content />
-        </div>
+      <div className={$tw('bg-zinc-800 overflow-y-scroll')}>
+        <Content />
       </div>
     </div>
   )

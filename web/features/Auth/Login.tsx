@@ -37,9 +37,9 @@ function LoginForm() {
 
       <div className="relative mb-4">
         <Input
+          className="bg-zinc-800 py-1 px-2 pr-10"
           fullWidth
           name="password"
-          className="bg-zinc-800 py-1 px-2 pr-10"
           type={isPassVisible ? 'text' : 'password'}
           onChange={() => setApiError('')}
         />
@@ -67,7 +67,13 @@ function LoginForm() {
 export default function Login() {
   return (
     <div className="flex h-[inherit]">
-      <div className="m-auto bg-zinc-900 p-12 pb-16 rounded-xl w-[min(25rem_95%)] shadow-[0.1rem_0.1rem_1rem_-0.5rem_black]">
+      <div
+        className={$tw(
+          'm-auto bg-zinc-900 pt-12 pb-16 px-[min(3rem,5%)] rounded-xl shadow-[0.1rem_0.1rem_1rem_-0.5rem_black]',
+          'w-full h-full',
+          'xxs:{w-[min(24rem,95%)] h-auto}'
+        )}
+      >
         <Suspense
           fallback={<h1 className="text-4xl text-center">Logging in...</h1>}
         >

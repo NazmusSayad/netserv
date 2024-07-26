@@ -4,10 +4,30 @@ import { createSuspense } from './api/react'
 import { actions } from './store'
 import Router from './Router'
 import { Suspense } from 'react'
+import type {} from '@mui/x-data-grid/themeAugmentation'
 
 const theme = createTheme({
   palette: {
     mode: 'dark',
+  },
+
+  components: {
+    // Use `MuiDataGrid` on DataGrid, DataGridPro and DataGridPremium
+    MuiDataGrid: {
+      styleOverrides: {
+        filterForm: { backgroundColor: 'transparent' },
+        headerFilterRow: { backgroundColor: 'transparent' },
+        panelHeader: {
+          backgroundColor: 'transparent',
+        },
+        columnHeader: {
+          backgroundColor: 'transparent',
+        },
+        root: {
+          backgroundColor: 'transparent',
+        },
+      },
+    },
   },
 })
 
