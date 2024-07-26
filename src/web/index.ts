@@ -1,9 +1,13 @@
 import { t } from 'noarg'
 import os = require('os')
+import extrass, { catchError } from 'extrass'
+import express = require('express')
 import qrcode = require('qrcode')
+import path = require('path')
 import arg from '../arg'
 import app from './express'
-import { generateApp } from './app'
+import generateController from './generate-controller'
+import { apiRouter, authRouter, staticRouter } from './router'
 
 arg.create(
   'web',
@@ -16,17 +20,43 @@ arg.create(
       maxLength: 1,
     },
     options: {
+      password: t.string(),
       host: t.string(),
       port: t.number().default(8000),
-      password: t.string(),
       qr: t.boolean().default(true),
     },
   },
   ([root = '.'], options) => {
     console.log({ root, options }, '\n')
-    options.password = 'pass'
+    // options.password = 'pass'
 
-    generateApp({ root, ...options })
+    const authEnabled = !!options.password
+    const controllers = catchError(generateController({ root, ...options }))
+
+    // Setup auth router
+    {
+      if (authEnabled) authRouter.post('/login', controllers.login)
+      authRouter.get('/init', controllers.init)
+      app.use('/auth', authRouter)
+    }
+
+    // Setup Static Router and root route fallback
+    {
+      app.use('/@', staticRouter)
+      app.get('/', (req, res, next) => {
+        res.redirect('/@')
+        next()
+      })
+    }
+
+    // Enable auth middleware
+    app.use(controllers.checkAuthMiddleware)
+
+    // Setup API router
+    {
+      app.use('/api', apiRouter)
+      app.use('/drive', express.static(path.resolve(root), { index: false }))
+    }
 
     function listen(name: string, port: number, host: string) {
       app.listen(port, host, async () => {
@@ -49,6 +79,7 @@ arg.create(
       })
     }
 
+    extrass(app)
     if (options.host) {
       listen('Custom Address', options.port, options.host)
     } else if (options.host) {

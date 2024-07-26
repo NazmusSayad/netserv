@@ -21,7 +21,7 @@ const ContentTable = () => {
         <TableHeader />
 
         {arrayOfNumbers.map((num) => {
-          return <TableItem key={num} data={num} />
+          return <TableItem key={num.name} data={num} />
         })}
       </table>
     </div>
@@ -46,13 +46,7 @@ const TableHeader = () => {
 
 const TableItem = ({ data }: { data: TableSingleItem }) => {
   return (
-    <TableRow
-      key={data.name}
-      className={$tw(
-        'outline outline-1 outline-gray-400/5',
-        'hover:bg-white/5'
-      )}
-    >
+    <TableRow key={data.name} className={$tw('hover:bg-white/5')}>
       <td className={_1stColumnClass}>
         <Checkbox checked={data.selected} size="small" />
       </td>
@@ -95,9 +89,7 @@ const TableRow = ({
       {children}
       <td
         style={{
-          width: `calc(var(--abcdefghij-gap-size) - ${
-            scrollBarWidth / 2 + 2
-          }px)`,
+          width: `calc(var(--abcdefghij-gap-size) + ${scrollBarWidth / 2}px)`,
           transition: 'width 0.25s ease-in',
         }}
       />

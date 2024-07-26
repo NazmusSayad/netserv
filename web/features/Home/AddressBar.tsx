@@ -1,15 +1,44 @@
 import { TextField, IconButton } from '@mui/material'
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { RiSearch2Line } from 'react-icons/ri'
+import { Link, useLocation } from 'react-router-dom'
 
 const AddressBar = (props) => {
   const [searchFocused, setSearchFocused] = useState(false)
   const searchInputRef = useRef<any>()
+  const location = useLocation()
+
+  const addresses = useMemo(() => {
+    return location.pathname
+      .split('/')
+      .filter((path) => path)
+      .map((path, index, arr) => {
+        return (
+          <>
+            {index === arr.length - 1 ? (
+              <p>{path}</p>
+            ) : (
+              <Link to={'/' + arr.slice(0, index + 1).join('/')}>{path}</Link>
+            )}
+
+            {index < arr.length - 1 && (
+              <div className="mx-1 text-gray-400">&gt;</div>
+            )}
+          </>
+        )
+      })
+  }, [location.pathname])
 
   return (
-    <div className="flex items-center">
-      <div className={$tw(searchFocused ? 'hidden' : 'flex-1')}>
-        asdfasdfasdfasdf
+    <div className="flex items-center gap-3">
+      <div>
+        <Link to={'..'}>UP</Link>
+      </div>
+
+      <div
+        className={$tw(searchFocused ? 'hidden' : 'flex-1', 'overflow-hidden')}
+      >
+        <div className="flex items-center">{addresses}</div>
       </div>
 
       <div className={$tw('relative', searchFocused ? 'w-full' : 'w-10')}>

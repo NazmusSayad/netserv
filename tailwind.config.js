@@ -5,13 +5,8 @@ module.exports = {
     transform: require('tailwind-variant-group').transform,
   },
 
-  plugins: [
-    function (config) {
-      console.log(Object.keys(config.config))
+  plugins: [],
 
-      console.log(config.postcss.document())
-    },
-  ],
   theme: {
     extend: {
       screens: {
@@ -26,5 +21,3 @@ module.exports = {
     },
   },
 }
-
-console.log('Hello world')

@@ -5,6 +5,8 @@ import Home from './features/Home'
 
 export default function Router() {
   const authEnabled = useStore((state) => state.auth.authEnabled)
+  console.log({ authEnabled })
+
   return authEnabled ? <AuthEnabledRouter /> : <AuthDisabledRouter />
 }
 

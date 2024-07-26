@@ -3,16 +3,8 @@ const url = (import.meta as any).env.DEV
   ? 'http://localhost:8000'
   : location.origin
 
-function getApiUrl() {
-  return url + '/api'
-}
-
-export function getDriveUrl(src: string) {
-  return url + '/drive/' + src
-}
-
 const reactHTTP = ReactHTTP({
-  baseURL: getApiUrl(),
+  baseURL: url,
   withCredentials: true,
 
   formatData(res) {

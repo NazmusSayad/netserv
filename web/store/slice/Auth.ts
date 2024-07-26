@@ -2,7 +2,7 @@ import { createSlice } from 'react-rtk'
 
 const initialState = {
   jwt: undefined as string | undefined,
-  authEnabled: true,
+  authEnabled: false,
 }
 
 export default createSlice('auth', {
