@@ -1,4 +1,4 @@
-import jwt = require('jsonwebtoken')
+import * as jwt from 'jsonwebtoken'
 
 const JWT_SECRET =
   Math.random().toString(36).substring(2, 15) +

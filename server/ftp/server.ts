@@ -1,6 +1,6 @@
-import fs = require('fs')
-import path = require('path')
-import bunyan = require('bunyan')
+import * as fs from 'fs'
+import * as path from 'path'
+import * as bunyan from 'bunyan'
 import { FtpSrv } from 'ftp-srv'
 
 type FTPConfig = {

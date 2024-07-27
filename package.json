@@ -6,15 +6,20 @@
   "scripts": {
     "start": "node ./dist/index.js",
     "dev": "vite ./web --host",
-    "tsc": "tsc --watch --noEmit",
-    "lab": "nw  ./src/__lab.ts",
-    "web": "nw  ./src/index.ts web --qr\\",
-    "ftp": "nw  ./src/index.ts ftp",
-    "get": "nw  ./src/index.ts get",
-    "send": "nw  ./src/index.ts send 192.168.0.100 8000",
+    "dev-server": "tsc -p ./server --watch",
     "build": "node ./build.cjs",
-    "build-server": "tsc",
-    "build-web": "tsc -p ./web/tsconfig.json && vite build ./web --emptyOutDir"
+    "build-server": "tsc -p ./server",
+    "build-web": "tsc -p ./web && vite build ./web --emptyOutDir",
+    "lab-run": "nw ./dist __lab.js",
+    "web-run": "nw ./dist web --qr\\",
+    "ftp-run": "nw ./dist ftp",
+    "get-run": "nw ./dist get",
+    "send-run": "nw ./dist send",
+    "lab": "run-p dev-server lab-run",
+    "web": "run-p dev-server web-run",
+    "ftp": "run-p dev-server ftp-run",
+    "get": "run-p dev-server get-run",
+    "send": "run-p dev-server send-run"
   },
   "dependencies": {
     "axios": "^1.7.2",

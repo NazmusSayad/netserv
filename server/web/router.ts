@@ -1,5 +1,5 @@
-import path = require('path')
-import express = require('express')
+import * as path from 'path'
+import * as express from 'express'
 import { WEB_APP_DIR } from './config'
 
 export const apiRouter = express.Router()

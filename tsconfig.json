@@ -1,13 +1,3 @@
 {
-  "compilerOptions": {
-    "target": "es6",
-    "outDir": "./dist",
-    "module": "CommonJS",
-    "skipLibCheck": true,
-    "strict": true,
-    "pretty": true,
-    "removeComments": true,
-    "moduleResolution": "node"
-  },
-  "include": ["./src"]
+  "compilerOptions": {}
 }

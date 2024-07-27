@@ -1,8 +1,8 @@
 import { t } from 'noarg'
-import os = require('os')
-import path = require('path')
-import qrcode = require('qrcode')
-import express = require('express')
+import * as os from 'os'
+import * as path from 'path'
+import * as qrcode from 'qrcode'
+import * as express from 'express'
 import extrass, { catchError } from 'extrass'
 import arg from '../arg'
 import app from './express'

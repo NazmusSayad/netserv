@@ -1,6 +1,6 @@
-import cors = require('cors')
-import morgan = require('morgan')
-import express = require('express')
+import * as cors from 'cors'
+import * as morgan from 'morgan'
+import * as express from 'express'
 import cookie = require('cookie-parser')
 
 const app = express()

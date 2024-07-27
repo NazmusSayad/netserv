@@ -1,5 +1,5 @@
-import os = require('os')
-import portfinder = require('portfinder')
+import * as os from 'os'
+import * as portfinder from 'portfinder'
 import app from './app'
 import { upload } from './handler'
 

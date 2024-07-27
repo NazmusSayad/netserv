@@ -1,6 +1,6 @@
-import fs = require('fs')
-import path = require('path')
-import busboy = require('busboy')
+import * as fs from 'fs'
+import * as path from 'path'
+import * as busboy from 'busboy'
 import { Request, Response } from 'express'
 import { GetConfig } from './server-starter'
 import ProgressBar from '../utils/progress-bar'

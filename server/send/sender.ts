@@ -1,5 +1,5 @@
 import axios from 'axios'
-import fs = require('fs')
+import * as fs from 'fs'
 import FormData = require('form-data')
 import ProgressBar from '../utils/progress-bar'
 
