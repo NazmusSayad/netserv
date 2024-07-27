@@ -12,6 +12,7 @@ declare global {
   var $cn: typeof getClassName
   var $store: typeof actions
   var $useStore: typeof useStore
+  var akdf: TestingAbc
 }
 
 import './index'

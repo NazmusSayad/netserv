@@ -1,5 +1,5 @@
-import { handler } from '../utils/express'
-import * as jwt from './jwt'
+import { handler } from '../../utils/express'
+import * as jwt from '../jwt'
 
 export default function (config: WebAppOptions) {
   const authEnabled = !!config.password

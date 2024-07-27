@@ -9,5 +9,5 @@
     "removeComments": true,
     "moduleResolution": "node"
   },
-  "include": ["./src", "web/declarations.d.ts"]
+  "include": ["./src"]
 }

@@ -1,13 +1,14 @@
 import { t } from 'noarg'
 import os = require('os')
-import extrass, { catchError } from 'extrass'
-import express = require('express')
-import qrcode = require('qrcode')
 import path = require('path')
+import qrcode = require('qrcode')
+import express = require('express')
+import extrass, { catchError } from 'extrass'
 import arg from '../arg'
 import app from './express'
-import generateController from './generate-controller'
 import { apiRouter, authRouter, staticRouter } from './router'
+import * as _dirController from './controller/dir'
+import generateAuthController from './controller/generate-auth'
 
 arg.create(
   'web',
@@ -31,12 +32,16 @@ arg.create(
     // options.password = 'pass'
 
     const authEnabled = !!options.password
-    const controllers = catchError(generateController({ root, ...options }))
+    const authController = catchError(
+      generateAuthController({ root, ...options })
+    )
+
+    const dirController = catchError(_dirController)
 
     // Setup auth router
     {
-      if (authEnabled) authRouter.post('/login', controllers.login)
-      authRouter.get('/init', controllers.init)
+      if (authEnabled) authRouter.post('/login', authController.login)
+      authRouter.get('/init', authController.init)
       app.use('/auth', authRouter)
     }
 
@@ -50,10 +55,12 @@ arg.create(
     }
 
     // Enable auth middleware
-    app.use(controllers.checkAuthMiddleware)
+    app.use(authController.checkAuthMiddleware)
 
     // Setup API router
     {
+      apiRouter.get('/info', dirController.getInfo)
+
       app.use('/api', apiRouter)
       app.use('/drive', express.static(path.resolve(root), { index: false }))
     }

@@ -10,8 +10,6 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 app.use(cookie())
 app.use(express.json())
 
-app.use((_, __, next) => {
-  setTimeout(next, 1000)
-})
+// app.use((_, __, next) => setTimeout(next, 1000))
 
 export default app
