@@ -9,7 +9,7 @@ export default defineConfig({
   publicDir: path.join(__dirname, '/static'),
 
   server: { host: 'localhost', port: 3000 },
-  build: { outDir: path.join(__dirname, '../dist-web') },
+  build: { outDir: path.join(__dirname, '../dist/web') },
   resolve: { alias: { '@': path.join(__dirname, './') } },
 
   css: { devSourcemap: true },

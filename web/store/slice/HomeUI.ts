@@ -1,11 +1,15 @@
 import { createSlice } from 'react-rtk'
-import { TableSingleItem } from '../../config/types'
+
+export type InfoTargetWeb<T> = T & {
+  selected?: boolean
+}
 
 const initialState = {
   status: {
     wrapperPaddingWidth: 0,
     refreshButtonAnimation: false,
-    items: [] as TableSingleItem[],
+    currentDir: null as InfoTargetWeb<InfoDir> | null,
+    currentFile: null as InfoFile | null,
   },
 
   config: {

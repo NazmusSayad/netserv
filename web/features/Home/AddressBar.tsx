@@ -1,83 +1,124 @@
-import { TextField, IconButton } from '@mui/material'
-import { useMemo, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { TextField, IconButton, ButtonBase } from '@mui/material'
 import { RiSearch2Line } from 'react-icons/ri'
-import { Link, useLocation } from 'react-router-dom'
+import { GrHomeRounded } from 'react-icons/gr'
+import { BiSolidRightArrow } from 'react-icons/bi'
+import useLocations from './useLocations'
 
-const AddressBar = (props) => {
+const AddressBar = () => {
+  const navigate = useNavigate()
   const [searchFocused, setSearchFocused] = useState(false)
-  const searchInputRef = useRef<any>()
-  const location = useLocation()
-
-  const addresses = useMemo(() => {
-    return location.pathname
-      .split('/')
-      .filter((path) => path)
-      .map((path, index, arr) => {
-        return (
-          <>
-            {index === arr.length - 1 ? (
-              <p>{path}</p>
-            ) : (
-              <Link to={'/' + arr.slice(0, index + 1).join('/')}>{path}</Link>
-            )}
-
-            {index < arr.length - 1 && (
-              <div className="mx-1 text-gray-400">&gt;</div>
-            )}
-          </>
-        )
-      })
-  }, [location.pathname])
+  const locations = useLocations()
+  const addressContainerRef = useAddressBarRef(locations.paths)
 
   return (
-    <div className="flex items-center gap-3">
-      <div>
-        <Link to={'..'}>UP</Link>
-      </div>
+    <div className="grid grid-flow-col auto-cols-[auto_1fr_auto] gap-2">
+      <IconButton
+        size="small"
+        onClick={() => navigate('/')}
+        disabled={locations.paths.length === 0}
+      >
+        <GrHomeRounded />
+      </IconButton>
 
       <div
-        className={$tw(searchFocused ? 'hidden' : 'flex-1', 'overflow-hidden')}
+        ref={addressContainerRef}
+        className={$tw(searchFocused ? 'hidden' : '', 'overflow-hidden')}
       >
-        <div className="flex items-center">{addresses}</div>
+        <div className="flex items-center h-full">
+          {locations.paths.map((location, i) => {
+            return (
+              <React.Fragment key={i}>
+                <ButtonBase
+                  tabIndex={-1}
+                  className="!rounded-md"
+                  onClick={() => {
+                    const path = locations.paths.slice(0, i + 1).join('/')
+                    navigate('/' + path)
+                  }}
+                >
+                  <div className="px-1">{location}</div>
+                </ButtonBase>
+
+                {locations.paths.length - 1 === i || (
+                  <div className="opacity-25 text-[0.5rem]">
+                    <BiSolidRightArrow />
+                  </div>
+                )}
+              </React.Fragment>
+            )
+          })}
+        </div>
       </div>
 
-      <div className={$tw('relative', searchFocused ? 'w-full' : 'w-10')}>
-        <TextField
-          fullWidth
-          style={{
-            transition: 'opacity 0.25s ease-in',
-            opacity: searchFocused ? 1 : 0,
-          }}
-          inputProps={{
-            ref: searchInputRef,
-            style: {
-              paddingInline: '0.5rem',
-              paddingBlock: '0.3rem',
-            },
-          }}
-          onFocus={() => setSearchFocused(true)}
-          onBlur={() => setSearchFocused(false)}
-          placeholder="Search..."
-          variant="outlined"
-          size="small"
-        />
+      <AddressBarSearch
+        searchFocused={searchFocused}
+        setSearchFocused={setSearchFocused}
+      />
+    </div>
+  )
+}
 
-        <div
-          className={$tw(
-            'absolute top-[50%] right-0 translate-y-[-50%]',
-            searchFocused ? 'hidden' : ''
-          )}
+function AddressBarSearch({ searchFocused, setSearchFocused }) {
+  const searchInputRef = useRef<any>()
+
+  return (
+    <div className={$tw('relative', searchFocused ? 'w-full' : 'w-10')}>
+      <TextField
+        fullWidth
+        style={{
+          transition: 'opacity 0.25s ease-in',
+          opacity: searchFocused ? 1 : 0,
+        }}
+        inputProps={{
+          ref: searchInputRef,
+          style: {
+            paddingInline: '0.5rem',
+            paddingBlock: '0.3rem',
+          },
+        }}
+        onFocus={() => setSearchFocused(true)}
+        onBlur={() => setSearchFocused(false)}
+        placeholder="Search..."
+        variant="outlined"
+        size="small"
+      />
+
+      <div
+        className={$tw(
+          'absolute top-[50%] right-0 translate-y-[-50%]',
+          searchFocused ? 'hidden' : ''
+        )}
+      >
+        <IconButton
+          tabIndex={-1}
+          onClick={() => setTimeout(() => searchInputRef.current.focus(), 50)}
         >
-          <IconButton
-            tabIndex={-1}
-            onClick={() => setTimeout(() => searchInputRef.current.focus(), 50)}
-          >
-            <RiSearch2Line />
-          </IconButton>
-        </div>
+          <RiSearch2Line />
+        </IconButton>
       </div>
     </div>
   )
+}
+
+function useAddressBarRef(locations: string[]) {
+  const addressContainerRef = useRef<any>()
+
+  const handleAddressBarScroll = useCallback(() => {
+    if (addressContainerRef.current) {
+      addressContainerRef.current.scrollLeft =
+        addressContainerRef.current.scrollWidth
+    }
+  }, [])
+
+  useEffect(() => handleAddressBarScroll, [locations])
+  useEffect(() => {
+    window.addEventListener('resize', handleAddressBarScroll)
+    return () => window.removeEventListener('resize', handleAddressBarScroll)
+  }, [])
+
+  return addressContainerRef
 }
 
 export default AddressBar

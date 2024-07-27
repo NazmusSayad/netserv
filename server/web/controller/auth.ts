@@ -1,17 +1,15 @@
-import { handler } from '../../utils/express'
 import * as jwt from '../jwt'
+import { createGenerator, WebAppOptions } from '../config'
 
-export default function (config: WebAppOptions) {
-  const authEnabled = !!config.password
-
-  return handler({
+export default createGenerator(function (config: WebAppOptions) {
+  return {
     login(req, res) {
-      console.log('Login attempt:', req.body.password)
-      console.log('Correct password', config.password)
-
-      if (!config.password) {
+      if (!config.authEnabled) {
         return res.status(400).json({ error: 'No login needed!' })
       }
+
+      console.log('Login attempt:', req.body.password)
+      console.log('Correct password', config.password)
 
       if (!req.body.password) {
         return res.status(400).json({ error: 'No password provided' })
@@ -31,10 +29,10 @@ export default function (config: WebAppOptions) {
     },
 
     init(req, res) {
-      console.log('Authenticating with password:', authEnabled)
+      console.log('Authenticating with password:', config.authEnabled)
 
-      if (!authEnabled) {
-        res.json({ authEnabled, jwt: null })
+      if (!config.authEnabled) {
+        res.json({ authEnabled: config.authEnabled, jwt: null })
       }
 
       const jwtCookie = req.cookies.jwt
@@ -57,16 +55,16 @@ export default function (config: WebAppOptions) {
           maxAge: 1000 * 60 * 60 * 24 * 365,
         })
 
-        res.json({ authEnabled, jwt: newJwt })
+        res.json({ authEnabled: config.authEnabled, jwt: newJwt })
       } else {
-        res.json({ authEnabled, jwt: null })
+        res.json({ authEnabled: config.authEnabled, jwt: null })
       }
     },
 
     checkAuthMiddleware(req, res, next) {
-      console.log('Authenticating with password:', authEnabled)
+      console.log('Authenticating with password:', config.authEnabled)
 
-      if (!authEnabled) {
+      if (!config.authEnabled) {
         return next()
       }
 
@@ -82,13 +80,5 @@ export default function (config: WebAppOptions) {
         res.status(401).json({ error: 'Invalid JWT cookie' })
       }
     },
-  })
-}
-
-export type WebAppOptions = {
-  root: string
-  port: number
-  password?: string
-  host?: string
-  qr: boolean
-}
+  }
+})

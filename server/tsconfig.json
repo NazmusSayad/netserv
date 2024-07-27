@@ -2,7 +2,7 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "target": "es6",
-    "outDir": "../dist",
+    "outDir": "../dist/server",
     "module": "CommonJS",
     "skipLibCheck": true,
     "strict": true,

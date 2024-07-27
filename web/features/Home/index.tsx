@@ -1,9 +1,10 @@
 import { actions, useStore } from '@/store'
-import { useEffect, useRef } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import AddressBar from './AddressBar'
 import Content from './Content'
 import Wrapper from './Wrapper'
 import Header from './Header'
+import PreviewModal from './PreviewModal'
 
 const Home = () => {
   const wrapperPaddingWidth = useStore(
@@ -59,8 +60,14 @@ const Home = () => {
       </div>
 
       <div className={$tw('bg-zinc-800 overflow-y-scroll')}>
-        <Content />
+        <Suspense
+          fallback={<div className="h-full bg-red-600">Loading...</div>}
+        >
+          <Content />
+        </Suspense>
       </div>
+
+      <PreviewModal />
     </div>
   )
 }
