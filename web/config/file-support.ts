@@ -2,7 +2,7 @@ import {
   FcImageFile,
   FcAudioFile,
   FcVideoFile,
-  FcCommandLine,
+  FcDocument,
 } from 'react-icons/fc'
 import { IconType } from 'react-icons'
 import Image from '@/features/View/Image'
@@ -45,7 +45,7 @@ const fileGroup: Record<string, FileSupport> = {
 
   Text: {
     ViewComponent: Text,
-    IconComponent: FcCommandLine,
+    IconComponent: FcDocument,
     extensions: new Set(['txt', 'js', 'ts', 'jsx', 'tsx', 'json']),
   },
 }

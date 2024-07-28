@@ -27,7 +27,7 @@ const Home = () => {
       <div className={$tw('bg-zinc-800 overflow-y-scroll')}>
         <LoadingSuspense text={'Loading dir...'}>
           <Content />
-          {/* <Loading /> */}
+          {/* <Loading>Hello World!</Loading> */}
         </LoadingSuspense>
       </div>
 
