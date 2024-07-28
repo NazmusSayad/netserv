@@ -2,8 +2,8 @@ import { createTheme, ThemeProvider } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
 import { createSuspense } from './api/react'
 import { actions } from './store'
+import { LoadingSuspense } from './components/Loading'
 import Router from './Router'
-import { Suspense } from 'react'
 
 const theme = createTheme({
   palette: {
@@ -15,9 +15,9 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Suspense fallback={<div>Loading...</div>}>
+      <LoadingSuspense>
         <AppInit />
-      </Suspense>
+      </LoadingSuspense>
     </ThemeProvider>
   )
 }

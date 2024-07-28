@@ -1,0 +1,12 @@
+.spinning {
+  animation: spinningAnimation 1s infinite;
+}
+
+@keyframes spinningAnimation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(720deg);
+  }
+}

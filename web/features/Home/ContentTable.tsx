@@ -1,13 +1,14 @@
 import { Location, useLocation, useNavigate } from 'react-router-dom'
-import { MouseEventHandler } from 'react'
-import { Checkbox } from '@mui/material'
-import { FcFile } from 'react-icons/fc'
-import { FcFolder } from 'react-icons/fc'
-import { getScrollBarWidth } from '@/utils/dom'
-import { actions, useStore } from '@/store'
+import useIsAnyItemSelected from './useIsAnyItemSelected'
 import { convertBytesToUnit } from '@/utils/size'
 import fileSupport from '@/config/file-support'
-import useIsAnyItemSelected from './useIsAnyItemSelected'
+import { actions, useStore } from '@/store'
+import { formatDate } from '@/utils/date'
+import { FcFolder } from 'react-icons/fc'
+import { MouseEventHandler, useMemo } from 'react'
+import { ButtonBase, Checkbox } from '@mui/material'
+import { FcFile, FcUp, FcDown } from 'react-icons/fc'
+import Wrapper from './Wrapper'
 
 const ContentTable = () => {
   const location = useLocation()
@@ -15,73 +16,116 @@ const ContentTable = () => {
   const currentDir = useStore((state) => state.homeui.status.currentDir)
   if (!currentDir) return <div>Empty</div>
 
+  const sortedDirs = useMemo(() => {
+    return Object.values(currentDir.childDirs)
+  }, [currentDir])
+
+  const sortedFiles = useMemo(() => {
+    return Object.values(currentDir.childFiles)
+  }, [currentDir])
+
   return (
-    <div className="relative">
-      <table style={{ width: '100%' }}>
-        <tbody>
-          <TableHeader />
+    <div>
+      <TableHeader />
 
-          {Object.values(currentDir.childDirs).map((item) => {
-            return (
-              <TableDataItem
-                key={item.name}
-                data={item}
-                location={location}
-                navigate={(path: string) => {
-                  navigate(`${location.pathname}/${path}`)
-                }}
-              />
-            )
-          })}
+      {sortedDirs.map((item) => {
+        return (
+          <TableItem
+            key={item.name}
+            data={item}
+            location={location}
+            navigate={(path: string) => {
+              navigate(`${location.pathname}/${path}`)
+            }}
+          />
+        )
+      })}
 
-          {Object.values(currentDir.childFiles).map((item) => {
-            return (
-              <TableDataItem
-                key={item.name}
-                data={item}
-                location={location}
-                navigate={(path: string) => {
-                  navigate(`${location.pathname}/?file=${path}`)
-                }}
-              />
-            )
-          })}
-        </tbody>
-      </table>
+      {sortedFiles.map((item) => {
+        return (
+          <TableItem
+            key={item.name}
+            data={item}
+            location={location}
+            navigate={(path: string) => {
+              navigate(`${location.pathname}/?file=${path}`)
+            }}
+          />
+        )
+      })}
     </div>
   )
 }
 
 const TableHeader = () => {
   const isAnySelected = useIsAnyItemSelected()
-  console.log({ selected: isAnySelected })
+  const sortBy = useStore((state) => state.homeui.config.sortBy)
+  const sortByMode = useStore((state) => state.homeui.config.sortByMode)
+
+  function generateClickHandler(name: typeof sortBy) {
+    return () => {
+      if (name === sortBy) {
+        actions.homeui.setConfig({
+          sortBy: name,
+          sortByMode: sortByMode === 'asc' ? 'dsc' : 'asc',
+        })
+      } else actions.homeui.setConfig({ sortBy: name })
+    }
+  }
+
+  const sortByModeElement = sortByMode == 'asc' ? <FcUp /> : <FcDown />
 
   return (
-    <TableRow
+    <Row
       addPadding
       className={
         'sticky top-0 bg-zinc-800 outline outline-white/15 outline-1 z-[999]'
       }
     >
-      <th className={checkboxColumnClass}>
-        <Checkbox
-          checked={isAnySelected}
-          onChange={() => {
-            isAnySelected
-              ? actions.homeui.unselectAllItems()
-              : actions.homeui.selectAllItems()
-          }}
-          size="small"
-        />
-      </th>
-      <th className={nameColumnClass}>Name</th>
-      <th className={sizeColumnClass}>Size</th>
-      <th className={modifiedColumnClass}>Modified At</th>
-    </TableRow>
+      <Checkbox
+        size="small"
+        checked={isAnySelected}
+        onChange={() => {
+          isAnySelected
+            ? actions.homeui.unselectAllItems()
+            : actions.homeui.selectAllItems()
+        }}
+      />
+
+      <ButtonBase
+        className={'!px-2 size-full !text-right !justify-start'}
+        onClick={generateClickHandler('name')}
+      >
+        <div className={'flex justify-between items-center w-full'}>
+          <div className={'font-medium'}>Name</div>
+          {sortBy === 'name' && sortByModeElement}
+        </div>
+      </ButtonBase>
+
+      <ButtonBase
+        className={'!px-2 size-full !text-right !justify-end'}
+        onClick={generateClickHandler('size')}
+      >
+        <div className={'flex justify-between items-center w-full'}>
+          <div className={'font-medium'}>Size</div>
+          {sortBy === 'size' && sortByModeElement}
+        </div>
+      </ButtonBase>
+
+      <ButtonBase
+        className={'!px-2 size-full !text-right !justify-end'}
+        onClick={generateClickHandler('modifiedAt')}
+      >
+        <div className={'flex justify-between items-center w-full'}>
+          <div className={'font-medium'}>Modified At</div>
+          {sortBy === 'modifiedAt' && sortByModeElement}
+        </div>
+      </ButtonBase>
+    </Row>
   )
 }
 
-const TableDataItem = ({
+const TableItem = ({
   data,
   navigate,
   location,
@@ -96,95 +140,90 @@ const TableDataItem = ({
       : FcFolder
 
   return (
-    <TableRow
+    <Row
       key={data.name}
       className={$tw('hover:bg-white/5')}
       onClick={() => navigate(data.name)}
     >
-      <td className={$tw(checkboxColumnClass)}>
-        <Checkbox
-          checked={Boolean(data.selected)}
-          size="small"
-          onClick={(e) => {
-            e.stopPropagation()
-            actions.homeui.toggleItem(data.name)
-          }}
-        />
-      </td>
+      <Checkbox
+        checked={Boolean(data.selected)}
+        size="small"
+        onClick={(e) => {
+          e.stopPropagation()
+          actions.homeui.toggleItem(data.name)
+        }}
+      />
 
-      <td className={$tw(nameColumnClass)}>
-        <span className="pr-1">
-          <Icon className="inline-block" />
-        </span>
+      <div className={'flex items-center gap-1'}>
+        <Icon />
+        <div className={'max-h-[1.5rem] overflow-hidden'}>{data.name}</div>
+      </div>
 
-        <span>{data.name}</span>
-      </td>
-
-      <td className={$tw(sizeColumnClass, 'opacity-50')}>
+      <span className={'opacity-80 text-sm'}>
         {data.type === 'file' && convertBytesToUnit(data.size)}
-      </td>
+      </span>
 
-      <td className={$tw(modifiedColumnClass, 'opacity-50')}>
+      <span className={'opacity-80 text-sm'}>
         {formatDate(data.modifiedAt)}
-      </td>
-    </TableRow>
+      </span>
+    </Row>
   )
 }
 
-function formatDate(date: Date) {
-  const currentDate = new Date()
-  const newDateInstance = new Date(date)
-
-  if (currentDate.toDateString() === newDateInstance.toDateString()) {
-    return currentDate.toLocaleTimeString()
-  }
-
-  return 'Hello'
-}
-
-const scrollBarWidth = getScrollBarWidth()
-const TableRow = ({
+const Row = ({
   children,
   className,
-  addPadding = false,
   onClick,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode[]
   addPadding?: boolean
   className?: string
   onClick?: MouseEventHandler
 }) => {
-  if (!addPadding) {
-    return (
-      <tr className={className} onClick={onClick}>
-        <td />
-        {children}
-        <td />
-      </tr>
-    )
-  }
-
   return (
-    <tr className={className}>
-      <td
-        style={{
-          width: `calc(var(--abcdefghij-gap-size) - ${scrollBarWidth + 4}px)`,
-          transition: 'width 0.25s ease-in',
-        }}
-      />
-      {children}
-      <td
-        style={{
-          width: `calc(var(--abcdefghij-gap-size) + ${scrollBarWidth / 2}px)`,
-          transition: 'width 0.25s ease-in',
-        }}
-      />
-    </tr>
+    <div className={className} onClick={onClick}>
+      <Wrapper>
+        <div
+          className={
+            'grid grid-flow-col auto-cols-[2.5rem_1fr_auto_auto] items-center'
+          }
+        >
+          <div
+            className={$tw(
+              'overflow-hidden py-1 w-10 text-left size-full grid items-center'
+            )}
+          >
+            {children[0]}
+          </div>
+
+          <div
+            className={$tw(
+              'overflow-hidden text-left size-full grid items-center'
+            )}
+          >
+            {children[1]}
+          </div>
+
+          <div
+            className={$tw(
+              'overflow-hidden w-16 text-right size-full grid items-center'
+            )}
+          >
+            {children[2]}
+          </div>
+
+          <div
+            className={$tw(
+              'hidden xxs:grid',
+              'overflow-hidden w-32 text-right size-full items-center'
+            )}
+          >
+            {children[3]}
+          </div>
+        </div>
+      </Wrapper>
+    </div>
   )
 }
 
-const checkboxColumnClass = 'py-1 w-10 text-left'
-const modifiedColumnClass = 'w-32 text-right'
-const sizeColumnClass = 'w-16 text-right'
-const nameColumnClass = 'text-left break-words break-all'
 export default ContentTable

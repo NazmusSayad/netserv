@@ -14,6 +14,8 @@ const initialState = {
 
   config: {
     showType: 'list' as 'grid' | 'list',
+    sortByMode: 'asc' as 'asc' | 'dsc',
+    sortBy: 'name' as 'name' | 'size' | 'modifiedAt',
   },
 }
 

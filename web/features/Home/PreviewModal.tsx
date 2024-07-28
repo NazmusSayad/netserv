@@ -4,12 +4,13 @@ import {
   MdOutlineDownload,
   MdDriveFileRenameOutline,
 } from 'react-icons/md'
-import { Suspense, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { IconButton, Modal } from '@mui/material'
 import { createSuspense } from '@/api/react'
 import PreviewFile from './PreviewFile'
 import { actions, useStore } from '@/store'
+import { LoadingSuspense } from '@/components/Loading'
 
 const PreviewModal = () => {
   const location = useLocation()
@@ -74,9 +75,9 @@ function PreviewModalCore() {
         </div>
 
         <div className={'overflow-x-hidden overflow-y-auto py-2 px-4'}>
-          <Suspense fallback={<h1>Loading......</h1>}>
+          <LoadingSuspense text={'Loading preview...'}>
             <PreviewFetchData currentFile={currentFile} />
-          </Suspense>
+          </LoadingSuspense>
         </div>
       </div>
     </div>

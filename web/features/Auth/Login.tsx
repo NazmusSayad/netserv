@@ -1,10 +1,11 @@
 import { Button, Input, ButtonBase } from '@mui/material'
-import { FormEvent, Suspense, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FaRegEyeSlash, FaRegEye } from 'react-icons/fa'
 import { MdPerson } from 'react-icons/md'
 import { useApi } from '@/api/react'
 import { actions } from '@/store'
+import { LoadingSuspense } from '@/components/Loading'
 
 function LoginForm() {
   const [isPassVisible, setIsPassVisible] = useState(false)
@@ -74,11 +75,9 @@ export default function Login() {
           'xxs:{w-[min(24rem,95%)] h-auto}'
         )}
       >
-        <Suspense
-          fallback={<h1 className="text-4xl text-center">Logging in...</h1>}
-        >
+        <LoadingSuspense text={'Logging in...'}>
           <LoginForm />
-        </Suspense>
+        </LoadingSuspense>
       </div>
     </div>
   )
