@@ -16,7 +16,7 @@ export const Loading = ({ children }: LoadingProps) => {
       containerRef.current?.clientWidth || 0,
       containerRef.current?.clientHeight || 0
     )
-    setSpinnerSize(Math.max(0, (minSize / 100) * 35) + 'px')
+    // setSpinnerSize(Math.max(0, (minSize / 100) * 35) + 'px')
   }, [])
 
   return (
@@ -29,9 +29,11 @@ export const Loading = ({ children }: LoadingProps) => {
     >
       {children && <h1 className={'text-2xl mb-5'}>{children}</h1>}
 
-      <div className={$tw(css.spinning)}>
+      <div className={$tw(css.loader)} />
+
+      {/* <div className={$tw(css.spinning)}>
         <RiRefreshLine style={{ width: spinnerSize, height: spinnerSize }} />
-      </div>
+      </div> */}
     </div>
   )
 }
