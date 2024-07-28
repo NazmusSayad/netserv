@@ -1,28 +1,41 @@
+import {
+  MdKeyboardDoubleArrowDown,
+  MdKeyboardDoubleArrowUp,
+} from 'react-icons/md'
+import Wrapper from './Wrapper'
 import { Location, useLocation, useNavigate } from 'react-router-dom'
 import useIsAnyItemSelected from './useIsAnyItemSelected'
-import { convertBytesToUnit } from '@/utils/size'
 import fileSupport from '@/config/file-support'
 import { actions, useStore } from '@/store'
 import { formatDate } from '@/utils/date'
 import { FcFolder } from 'react-icons/fc'
 import { MouseEventHandler, useMemo } from 'react'
 import { ButtonBase, Checkbox } from '@mui/material'
-import { FcFile, FcUp, FcDown } from 'react-icons/fc'
-import Wrapper from './Wrapper'
+import { FcFile } from 'react-icons/fc'
+import { formatBytesToUnit, sortByKey } from '@/utils'
 
 const ContentTable = () => {
   const location = useLocation()
   const navigate = useNavigate()
+  const sortBy = useStore((state) => state.homeui.config.sortBy)
+  const sortByMode = useStore((state) => state.homeui.config.sortByMode)
   const currentDir = useStore((state) => state.homeui.status.currentDir)
-  if (!currentDir) return <div>Empty</div>
 
   const sortedDirs = useMemo(() => {
-    return Object.values(currentDir.childDirs)
-  }, [currentDir])
+    if (!currentDir) return []
+    return sortByKey(
+      Object.values(currentDir.childDirs),
+      sortBy === 'size' ? 'name' : sortBy,
+      sortBy === 'size' ? 'asc' : sortByMode
+    )
+  }, [currentDir, sortBy, sortByMode])
 
   const sortedFiles = useMemo(() => {
-    return Object.values(currentDir.childFiles)
-  }, [currentDir])
+    if (!currentDir) return []
+    return sortByKey(Object.values(currentDir.childFiles), sortBy, sortByMode)
+  }, [currentDir, sortBy, sortByMode])
+
+  if (!currentDir) return <div>Empty</div>
 
   return (
     <div>
@@ -73,7 +86,12 @@ const TableHeader = () => {
     }
   }
 
-  const sortByModeElement = sortByMode == 'asc' ? <FcUp /> : <FcDown />
+  const sortByModeElement =
+    sortByMode == 'asc' ? (
+      <MdKeyboardDoubleArrowDown />
+    ) : (
+      <MdKeyboardDoubleArrowUp />
+    )
 
   return (
     <Row
@@ -106,9 +124,9 @@ const TableHeader = () => {
         className={'!px-2 size-full !text-right !justify-end'}
         onClick={generateClickHandler('size')}
       >
-        <div className={'flex justify-between items-center w-full'}>
-          <div className={'font-medium'}>Size</div>
+        <div className={'flex justify-end items-center w-full'}>
           {sortBy === 'size' && sortByModeElement}
+          <div className={'font-medium'}>Size</div>
         </div>
       </ButtonBase>
 
@@ -116,9 +134,9 @@ const TableHeader = () => {
         className={'!px-2 size-full !text-right !justify-end'}
         onClick={generateClickHandler('modifiedAt')}
       >
-        <div className={'flex justify-between items-center w-full'}>
-          <div className={'font-medium'}>Modified At</div>
+        <div className={'flex justify-end items-center w-full'}>
           {sortBy === 'modifiedAt' && sortByModeElement}
+          <div className={'font-medium'}>Modified At</div>
         </div>
       </ButtonBase>
     </Row>
@@ -160,7 +178,7 @@ const TableItem = ({
       </div>
 
       <span className={'opacity-80 text-sm'}>
-        {data.type === 'file' && convertBytesToUnit(data.size)}
+        {data.type === 'file' && formatBytesToUnit(data.size)}
       </span>
 
       <span className={'opacity-80 text-sm'}>
@@ -206,7 +224,7 @@ const Row = ({
 
           <div
             className={$tw(
-              'overflow-hidden w-16 text-right size-full grid items-center'
+              'overflow-hidden w-20 text-right size-full grid items-center'
             )}
           >
             {children[2]}
