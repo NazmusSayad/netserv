@@ -69,7 +69,7 @@ arg.create(
     apiRouter.use('/delete', fsDeleteRouter)
 
     app.use('/api', apiRouter)
-    app.use('/drive', express.static(path.resolve(root), { index: false }))
+    app.use('/fs', express.static(path.resolve(root), { index: false }))
 
     function listen(name: string, port: number, host: string) {
       app.listen(port, host, async () => {

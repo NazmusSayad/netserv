@@ -1,29 +1,36 @@
 import useEffectExceptOnMount from 'use-effect-except-on-mount'
 import { createSuspense, useApi } from '@/api/react'
-import { actions } from '@/store'
 import useLocations from './useLocations'
-import { useEffect } from 'react'
+import { actions } from '@/store'
+import { useNavigate } from 'react-router-dom'
 
 const useSuspense = createSuspense()
 export default function () {
+  const navigate = useNavigate()
   const locations = useLocations()
 
   useSuspense(
-    { method: 'GET', url: '/api/dir' + locations.pathname },
+    { method: 'GET', url: 'api/dir' + locations.pathname },
     ([response]) => setCurrentDir(response as any)
   )
 
   useEffectExceptOnMount(() => {
     ;(async () => {
       actions.homeui.setState({ refreshButtonAnimation: true })
-      setCurrentDir((await api.get('/api/dir' + locations.pathname)) as any)
+      setCurrentDir((await api.get('api/dir' + locations.pathname)) as any)
       actions.homeui.setState({ refreshButtonAnimation: false })
     })()
   }, [locations.paths])
 
-  useEffect(() => {
-    console.log('Change me')
-  }, [locations.search])
+  useEffectExceptOnMount(() => {
+    if (locations.state !== 'refresh') return
+    navigate(locations.pathname, { state: null, replace: true })
+    ;(async () => {
+      actions.homeui.setState({ refreshButtonAnimation: true })
+      setCurrentDir((await api.get('api/dir' + locations.pathname)) as any)
+      actions.homeui.setState({ refreshButtonAnimation: false })
+    })()
+  }, [locations.state])
 
   const api = useApi({ suspense: true })
 }
@@ -32,7 +39,7 @@ export function setCurrentDir({
   data,
 }: {
   ok: boolean
-  data?: { dir: InfoDir }
+  data?: { dir: InfoDirWeb }
 }) {
   data?.dir && actions.homeui.setState({ currentDir: data.dir })
 }
@@ -41,7 +48,7 @@ export function setCurrentFile({
   data,
 }: {
   ok: boolean
-  data?: { file: InfoFile }
+  data?: { file: InfoDetailedFile }
 }) {
   data?.file && actions.homeui.setState({ currentFile: data.file })
 }

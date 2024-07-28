@@ -8,8 +8,8 @@ const initialState = {
   status: {
     wrapperPaddingWidth: 0,
     refreshButtonAnimation: false,
-    currentDir: null as InfoTargetWeb<InfoDir> | null,
-    currentFile: null as InfoFile | null,
+    currentDir: null as InfoDirWeb | null,
+    currentFile: null as InfoDetailedFile | null,
   },
 
   config: {
@@ -40,6 +40,48 @@ export default createSlice('homeui', {
       }
 
       localStorage.setItem('homeui-config', JSON.stringify(state.config))
+    },
+
+    toggleItem(state, name: string) {
+      if (!state.status.currentDir) return
+
+      for (const key in state.status.currentDir.childDirs) {
+        if (key === name) {
+          state.status.currentDir.childDirs[name].selected =
+            !state.status.currentDir.childDirs[name].selected
+        }
+      }
+
+      for (const key in state.status.currentDir.childFiles) {
+        if (key === name) {
+          state.status.currentDir.childFiles[name].selected =
+            !state.status.currentDir.childFiles[name].selected
+        }
+      }
+    },
+
+    selectAllItems(state) {
+      if (!state.status.currentDir) return
+
+      for (const key in state.status.currentDir.childDirs) {
+        state.status.currentDir.childDirs[key].selected = true
+      }
+
+      for (const key in state.status.currentDir.childFiles) {
+        state.status.currentDir.childFiles[key].selected = true
+      }
+    },
+
+    unselectAllItems(state) {
+      if (!state.status.currentDir) return
+
+      for (const key in state.status.currentDir.childDirs) {
+        state.status.currentDir.childDirs[key].selected = false
+      }
+
+      for (const key in state.status.currentDir.childFiles) {
+        state.status.currentDir.childFiles[key].selected = false
+      }
     },
   },
 })

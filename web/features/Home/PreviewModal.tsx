@@ -1,59 +1,106 @@
-import { Suspense, useMemo } from 'react'
+import {
+  MdClose,
+  MdDeleteOutline,
+  MdOutlineDownload,
+  MdDriveFileRenameOutline,
+} from 'react-icons/md'
+import { Suspense, useEffect, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Modal } from '@mui/material'
+import { IconButton, Modal } from '@mui/material'
 import { createSuspense } from '@/api/react'
-import { actions } from '@/store'
 import PreviewFile from './PreviewFile'
+import { actions, useStore } from '@/store'
 
 const PreviewModal = () => {
-  const navigate = useNavigate()
   const location = useLocation()
-  const fileSearchParam = useMemo(() => {
-    if (location.search.includes('file=')) {
-      return 'abc'
-    }
-  }, [location.search])
+
+  const fileNameExistsInQuery = useMemo(() => {
+    return location.search.includes('file=')
+  }, [location.search])!
 
   return (
-    <Modal open={!!fileSearchParam}>
-      <div
-        className="h-full w-full grid outline-none"
-        onClick={(e) => navigate(location.pathname)}
-      >
-        <div
-          className={$tw(
-            'overflow-hidden bg-zinc-800 m-auto size-full transition-all shadow-zinc-400 max-w-5xl grid auto-rows-[auto_1fr]',
-            'sm:{rounded-lg h-[90%] w-[90%]}'
-          )}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className={'flex justify-between py-2 px-4'}>
-            <div>Left</div>
-            <div>Right</div>
-          </div>
-
-          <div className={'bg-red-500 overflow-x-hidden overflow-y-auto py-2 px-4'}>
-            <Suspense fallback={<h1>Loading......</h1>}>
-              <PreviewModalCore />
-            </Suspense>
-          </div>
-        </div>
-      </div>
+    <Modal open={!!fileNameExistsInQuery}>
+      <PreviewModalCore />
     </Modal>
   )
 }
 
-const useSuspense = createSuspense()
 function PreviewModalCore() {
   const location = useLocation()
+  const navigate = useNavigate()
+  const currentFile = useStore((state) => state.homeui.status.currentFile)
+
+  useEffect(
+    () => () => {
+      actions.homeui.setState({ currentFile: null })
+    },
+    []
+  )
+
+  return (
+    <div
+      className="h-full w-full grid outline-none"
+      onClick={() => navigate(location.pathname)}
+    >
+      <div
+        className={$tw(
+          'overflow-hidden bg-zinc-800 m-auto size-full transition-all shadow-zinc-400 max-w-5xl grid auto-rows-[auto_1fr]',
+          'sm:{rounded-lg h-[90%] w-[90%]}'
+        )}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div
+          className={
+            'flex justify-between py-2 px-4 border-b border-stone-600 items-center'
+          }
+        >
+          <div>
+            <IconButton disabled={!currentFile}>
+              <MdDriveFileRenameOutline />
+            </IconButton>
+            <IconButton disabled={!currentFile}>
+              <MdOutlineDownload />
+            </IconButton>
+            <IconButton disabled={!currentFile} className={'text-red-500'}>
+              <MdDeleteOutline color={'#ef4444'} />
+            </IconButton>
+          </div>
+
+          <div>
+            <IconButton onClick={() => navigate(location.pathname)}>
+              <MdClose />
+            </IconButton>
+          </div>
+        </div>
+
+        <div className={'overflow-x-hidden overflow-y-auto py-2 px-4'}>
+          <Suspense fallback={<h1>Loading......</h1>}>
+            <PreviewFetchData currentFile={currentFile} />
+          </Suspense>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const useSuspense = createSuspense()
+function PreviewFetchData({ currentFile }) {
+  const location = useLocation()
+
+  const fileName = useMemo(() => {
+    // FIXME: This is not perfect fix this
+    const [, name] = location.search.match(/file=(.+)/) ?? []
+    return name
+  }, [])
+
   useSuspense(
-    { url: '/api/file/' + location.pathname + '/index.js' },
-    ([{ data }]) => {
-      actions.homeui.setState({ currentFile: data.file })
+    { url: 'api/file/' + location.pathname + '/' + fileName },
+    ([file]) => {
+      file.ok && actions.homeui.setState({ currentFile: file.data.file })
     }
   )
 
-  return <PreviewFile />
+  return currentFile ? <PreviewFile /> : 'No File Found!'
 }
 
 export default PreviewModal

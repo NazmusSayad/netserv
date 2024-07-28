@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-function getInfoDirBasic(target: string): InfoBasicDir {
+function getInfoDirBasic(target: string): InfoChildDirServer {
   const stats = fs.statSync(target)
 
   return {
@@ -12,11 +12,11 @@ function getInfoDirBasic(target: string): InfoBasicDir {
   }
 }
 
-export function getInfoDir(target: string): InfoDir {
+export function getInfoDir(target: string): InfoDirServer {
   const children = fs.readdirSync(target)
 
-  const childDirs: Record<string, InfoBasicDir> = {}
-  const childFiles: Record<string, InfoBasicFile> = {}
+  const childDirs: InfoDirServer['childDirs'] = {}
+  const childFiles: InfoDirServer['childFiles'] = {}
 
   children.forEach((name) => {
     const childPath = path.join(target, name)
@@ -31,12 +31,13 @@ export function getInfoDir(target: string): InfoDir {
   return { ...getInfoDirBasic(target), childDirs, childFiles }
 }
 
-export function getInfoFile(target: string): InfoFile {
+export function getInfoFile(target: string): InfoDetailedFile {
   const stats = fs.statSync(target)
 
   return {
     type: 'file',
     name: path.basename(target),
+    ext: path.extname(target).slice(1),
     size: stats.size,
     createdAt: stats.birthtime,
     modifiedAt: stats.mtime,

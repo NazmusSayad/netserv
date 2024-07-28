@@ -1,18 +1,18 @@
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Location, useLocation, useNavigate } from 'react-router-dom'
 import { MouseEventHandler } from 'react'
 import { Checkbox } from '@mui/material'
 import { FcFile } from 'react-icons/fc'
 import { FcFolder } from 'react-icons/fc'
-import { InfoTargetWeb } from '@/store/slice/HomeUI'
 import { getScrollBarWidth } from '@/utils/dom'
-import { useStore } from '@/store'
+import { actions, useStore } from '@/store'
 import { convertBytesToUnit } from '@/utils/size'
+import fileSupport from '@/config/file-support'
+import useIsAnyItemSelected from './useIsAnyItemSelected'
 
 const ContentTable = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const currentDir = useStore((state) => state.homeui.status.currentDir)
-
   if (!currentDir) return <div>Empty</div>
 
   return (
@@ -26,6 +26,7 @@ const ContentTable = () => {
               <TableDataItem
                 key={item.name}
                 data={item}
+                location={location}
                 navigate={(path: string) => {
                   navigate(`${location.pathname}/${path}`)
                 }}
@@ -38,6 +39,7 @@ const ContentTable = () => {
               <TableDataItem
                 key={item.name}
                 data={item}
+                location={location}
                 navigate={(path: string) => {
                   navigate(`${location.pathname}/?file=${path}`)
                 }}
@@ -51,17 +53,30 @@ const ContentTable = () => {
 }
 
 const TableHeader = () => {
+  const isAnySelected = useIsAnyItemSelected()
+  console.log({ selected: isAnySelected })
+
   return (
     <TableRow
       addPadding
-      className={'sticky top-0 bg-zinc-800 outline outline-white/15 outline-1 z-[999]'}
+      className={
+        'sticky top-0 bg-zinc-800 outline outline-white/15 outline-1 z-[999]'
+      }
     >
-      <th className={_1stColumnClass}>
-        <Checkbox defaultChecked size="small" />
+      <th className={checkboxColumnClass}>
+        <Checkbox
+          checked={isAnySelected}
+          onChange={() => {
+            isAnySelected
+              ? actions.homeui.unselectAllItems()
+              : actions.homeui.selectAllItems()
+          }}
+          size="small"
+        />
       </th>
-      <th className={_2ndColumnClass}>Name</th>
-      <th className={_3rdColumnClass}>Modified At</th>
-      <th className={_4thColumnClass}>Size</th>
+      <th className={nameColumnClass}>Name</th>
+      <th className={sizeColumnClass}>Size</th>
+      <th className={modifiedColumnClass}>Modified At</th>
     </TableRow>
   )
 }
@@ -69,44 +84,48 @@ const TableHeader = () => {
 const TableDataItem = ({
   data,
   navigate,
+  location,
 }: {
-  data: InfoTargetWeb<InfoBasicDir | InfoBasicFile>
+  data: InfoChildDirWeb | InfoChildFileWeb
   navigate: (path: string) => void
+  location: Location
 }) => {
+  const Icon =
+    data.type === 'file'
+      ? fileSupport(data.ext)?.IconComponent || FcFile
+      : FcFolder
+
   return (
     <TableRow
       key={data.name}
       className={$tw('hover:bg-white/5')}
       onClick={() => navigate(data.name)}
     >
-      <td className={$tw(_1stColumnClass, 'opacity-50')}>
+      <td className={$tw(checkboxColumnClass)}>
         <Checkbox
-          checked={data.selected}
+          checked={Boolean(data.selected)}
           size="small"
           onClick={(e) => {
             e.stopPropagation()
+            actions.homeui.toggleItem(data.name)
           }}
         />
       </td>
 
-      <td className={$tw(_2ndColumnClass)}>
+      <td className={$tw(nameColumnClass)}>
         <span className="pr-1">
-          {data.type === 'file' ? (
-            <FcFile className="inline-block" />
-          ) : (
-            <FcFolder className="inline-block" />
-          )}
+          <Icon className="inline-block" />
         </span>
 
         <span>{data.name}</span>
       </td>
 
-      <td className={$tw(_3rdColumnClass, 'opacity-50')}>
-        {formatDate(data.modifiedAt)}
+      <td className={$tw(sizeColumnClass, 'opacity-50')}>
+        {data.type === 'file' && convertBytesToUnit(data.size)}
       </td>
 
-      <td className={$tw(_4thColumnClass, 'opacity-50')}>
-        {data.type === 'file' && convertBytesToUnit(data.size)}
+      <td className={$tw(modifiedColumnClass, 'opacity-50')}>
+        {formatDate(data.modifiedAt)}
       </td>
     </TableRow>
   )
@@ -164,8 +183,8 @@ const TableRow = ({
   )
 }
 
-const _1stColumnClass = 'py-1 w-10 text-left'
-const _2ndColumnClass = 'text-left'
-const _3rdColumnClass = 'w-48 text-right'
-const _4thColumnClass = 'w-16 text-right'
+const checkboxColumnClass = 'py-1 w-10 text-left'
+const modifiedColumnClass = 'w-32 text-right'
+const sizeColumnClass = 'w-16 text-right'
+const nameColumnClass = 'text-left break-words break-all'
 export default ContentTable
