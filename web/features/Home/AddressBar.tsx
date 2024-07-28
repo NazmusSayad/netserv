@@ -62,11 +62,18 @@ const AddressBar = () => {
 
 function AddressBarSearch({ searchFocused, setSearchFocused }) {
   const searchInputRef = useRef<any>()
+  const searchText = $useStore((state) => state.homeui.status.searchText)
 
   return (
     <div className={$tw('relative', searchFocused ? 'w-full' : 'w-10')}>
       <TextField
         fullWidth
+        size="small"
+        value={searchText}
+        variant="outlined"
+        placeholder="Search..."
+        onFocus={() => setSearchFocused(true)}
+        onBlur={() => setSearchFocused(false)}
         style={{
           transition: 'opacity 0.25s ease-in',
           opacity: searchFocused ? 1 : 0,
@@ -78,11 +85,9 @@ function AddressBarSearch({ searchFocused, setSearchFocused }) {
             paddingBlock: '0.3rem',
           },
         }}
-        onFocus={() => setSearchFocused(true)}
-        onBlur={() => setSearchFocused(false)}
-        placeholder="Search..."
-        variant="outlined"
-        size="small"
+        onChange={(e) => {
+          $store.homeui.setState({ searchText: e.target.value })
+        }}
       />
 
       <div

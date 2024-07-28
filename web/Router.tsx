@@ -1,15 +1,15 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import Login from './features/Auth/Login'
-import { useStore } from './store'
-import Home from './features/Home'
+import { lazy } from 'react'
+const Login = lazy(() => import('./features/Auth/Login'))
+const Home = lazy(() => import('./features/Home'))
 
 export default function Router() {
-  const authEnabled = useStore((state) => state.auth.authEnabled)
+  const authEnabled = $useStore((state) => state.auth.authEnabled)
   return authEnabled ? <AuthEnabledRouter /> : <AuthDisabledRouter />
 }
 
 function AuthEnabledRouter() {
-  const jwt = useStore((state) => state.auth.jwt)
+  const jwt = $useStore((state) => state.auth.jwt)
 
   return (
     <Routes>

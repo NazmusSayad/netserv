@@ -1,52 +1,33 @@
 import {
-  MdKeyboardDoubleArrowDown,
   MdKeyboardDoubleArrowUp,
+  MdKeyboardDoubleArrowDown,
 } from 'react-icons/md'
 import Wrapper from './Wrapper'
-import { Location, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import useIsAnyItemSelected from './useIsAnyItemSelected'
 import fileSupport from '@/config/file-support'
-import { actions, useStore } from '@/store'
 import { formatDate } from '@/utils/date'
 import { FcFolder } from 'react-icons/fc'
-import { MouseEventHandler, useMemo } from 'react'
+import { MouseEventHandler } from 'react'
 import { ButtonBase, Checkbox } from '@mui/material'
 import { FcFile } from 'react-icons/fc'
-import { formatBytesToUnit, sortByKey } from '@/utils'
+import { formatBytesToUnit } from '@/utils'
+import { useGetContentData } from './useContentData'
 
 const ContentTable = () => {
   const location = useLocation()
   const navigate = useNavigate()
-  const sortBy = useStore((state) => state.homeui.config.sortBy)
-  const sortByMode = useStore((state) => state.homeui.config.sortByMode)
-  const currentDir = useStore((state) => state.homeui.status.currentDir)
-
-  const sortedDirs = useMemo(() => {
-    if (!currentDir) return []
-    return sortByKey(
-      Object.values(currentDir.childDirs),
-      sortBy === 'size' ? 'name' : sortBy,
-      sortBy === 'size' ? 'asc' : sortByMode
-    )
-  }, [currentDir, sortBy, sortByMode])
-
-  const sortedFiles = useMemo(() => {
-    if (!currentDir) return []
-    return sortByKey(Object.values(currentDir.childFiles), sortBy, sortByMode)
-  }, [currentDir, sortBy, sortByMode])
-
-  if (!currentDir) return <div>Empty</div>
+  const [currentDir] = useGetContentData()
 
   return (
     <div>
       <TableHeader />
 
-      {sortedDirs.map((item) => {
+      {currentDir.sortedDirs.map((item) => {
         return (
           <TableItem
             key={item.name}
             data={item}
-            location={location}
             navigate={(path: string) => {
               navigate(`${location.pathname}/${path}`)
             }}
@@ -54,12 +35,11 @@ const ContentTable = () => {
         )
       })}
 
-      {sortedFiles.map((item) => {
+      {currentDir.sortedFiles.map((item) => {
         return (
           <TableItem
             key={item.name}
             data={item}
-            location={location}
             navigate={(path: string) => {
               navigate(`${location.pathname}/?file=${path}`)
             }}
@@ -72,17 +52,17 @@ const ContentTable = () => {
 
 const TableHeader = () => {
   const isAnySelected = useIsAnyItemSelected()
-  const sortBy = useStore((state) => state.homeui.config.sortBy)
-  const sortByMode = useStore((state) => state.homeui.config.sortByMode)
+  const sortBy = $useStore((state) => state.homeui.config.sortBy)
+  const sortByMode = $useStore((state) => state.homeui.config.sortByMode)
 
   function generateClickHandler(name: typeof sortBy) {
     return () => {
       if (name === sortBy) {
-        actions.homeui.setConfig({
+        $store.homeui.setConfig({
           sortBy: name,
           sortByMode: sortByMode === 'asc' ? 'dsc' : 'asc',
         })
-      } else actions.homeui.setConfig({ sortBy: name })
+      } else $store.homeui.setConfig({ sortBy: name })
     }
   }
 
@@ -105,8 +85,8 @@ const TableHeader = () => {
         checked={isAnySelected}
         onChange={() => {
           isAnySelected
-            ? actions.homeui.unselectAllItems()
-            : actions.homeui.selectAllItems()
+            ? $store.homeui.unselectAllItems()
+            : $store.homeui.selectAllItems()
         }}
       />
 
@@ -146,11 +126,9 @@ const TableHeader = () => {
 const TableItem = ({
   data,
   navigate,
-  location,
 }: {
-  data: InfoChildDirWeb | InfoChildFileWeb
   navigate: (path: string) => void
-  location: Location
+  data: InfoChildDirWeb | InfoChildFileWeb
 }) => {
   const Icon =
     data.type === 'file'
@@ -162,13 +140,23 @@ const TableItem = ({
       key={data.name}
       className={$tw('hover:bg-white/5')}
       onClick={() => navigate(data.name)}
+      onContextMenu={(e) => {
+        e.preventDefault()
+        $store.homeui.setState({
+          rowContextMenu: {
+            item: data,
+            mouseX: e.clientX,
+            mouseY: e.clientY,
+          },
+        })
+      }}
     >
       <Checkbox
         checked={Boolean(data.selected)}
         size="small"
         onClick={(e) => {
           e.stopPropagation()
-          actions.homeui.toggleItem(data.name)
+          $store.homeui.toggleItem(data.name)
         }}
       />
 
@@ -192,14 +180,16 @@ const Row = ({
   children,
   className,
   onClick,
+  onContextMenu,
 }: {
   children: React.ReactNode[]
   addPadding?: boolean
   className?: string
   onClick?: MouseEventHandler
+  onContextMenu?: MouseEventHandler
 }) => {
   return (
-    <div className={className} onClick={onClick}>
+    <div className={className} onClick={onClick} onContextMenu={onContextMenu}>
       <Wrapper>
         <div
           className={

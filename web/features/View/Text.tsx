@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
-import { ViewComponent } from '@/config/file-support'
+import type { ViewComponent } from '@/config/file-support'
+import SyntaxHighlighter from 'react-syntax-highlighter'
+import { tomorrowNight } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+import { Loading } from '@/components/Loading'
 
 const Text: ViewComponent = ({ url }) => {
   const [loading, setLoading] = useState(true)
@@ -17,11 +20,21 @@ const Text: ViewComponent = ({ url }) => {
     })()
   }, [])
 
-  return loading ? <h1>Loading Preview.....</h1> : <LoadContent text={text} />
-}
+  if (loading) return <Loading>Loading preview....</Loading>
 
-const LoadContent = ({ text }: { text: string }) => {
-  return <div className={'size-full'}>{text.repeat(10)}</div>
+  return (
+    <div className={'select-text'}>
+      <SyntaxHighlighter
+        wrapLines
+        wrapLongLines
+        showLineNumbers
+        style={tomorrowNight}
+        className={'size-full !bg-transparent'}
+      >
+        {text}
+      </SyntaxHighlighter>
+    </div>
+  )
 }
 
 export default Text

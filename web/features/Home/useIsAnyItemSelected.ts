@@ -1,8 +1,7 @@
-import { useStore } from '@/store'
 import { useMemo } from 'react'
 
 export default function () {
-  const currentDir = useStore((state) => state.homeui.status.currentDir)
+  const currentDir = $useStore((state) => state.homeui.status.currentDir)
 
   return useMemo(() => {
     if (!currentDir) return false

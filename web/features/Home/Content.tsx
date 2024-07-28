@@ -1,11 +1,10 @@
-import { useStore } from '@/store'
 import ContentGrid from './ContentGrid'
 import ContentTable from './ContentTable'
-import useContentData from './useContentData'
+import { useFetchContentData } from './useContentData'
 
 const Content = () => {
-  useContentData()
-  const showType = useStore((state) => state.homeui.config.showType)
+  useFetchContentData()
+  const showType = $useStore((state) => state.homeui.config.showType)
   return showType === 'grid' ? <ContentGrid /> : <ContentTable />
 }
 

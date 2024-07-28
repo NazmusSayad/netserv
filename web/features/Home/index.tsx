@@ -1,9 +1,11 @@
-import { Loading, LoadingSuspense } from '@/components/Loading'
+import { lazy } from 'react'
+import { LoadingSuspense } from '@/components/Loading'
 import PreviewModal from './PreviewModal'
 import AddressBar from './AddressBar'
-import Content from './Content'
 import Wrapper from './Wrapper'
 import Header from './Header'
+import ContentContextMenu from './ContentContextMenu'
+const Content = lazy(() => import('./Content'))
 
 const Home = () => {
   return (
@@ -27,11 +29,11 @@ const Home = () => {
       <div className={$tw('bg-zinc-800 overflow-y-scroll')}>
         <LoadingSuspense text={'Loading dir...'}>
           <Content />
-          {/* <Loading>Hello World!</Loading> */}
         </LoadingSuspense>
       </div>
 
       <PreviewModal />
+      <ContentContextMenu />
     </div>
   )
 }

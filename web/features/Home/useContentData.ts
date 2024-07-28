@@ -1,11 +1,12 @@
 import useEffectExceptOnMount from 'use-effect-except-on-mount'
 import { createSuspense, useApi } from '@/api/react'
 import useLocations from './useLocations'
-import { actions } from '@/store'
 import { useNavigate } from 'react-router-dom'
+import { useMemo } from 'react'
+import { sortByKey } from '@/utils'
 
 const useSuspense = createSuspense()
-export default function () {
+export function useFetchContentData() {
   const navigate = useNavigate()
   const locations = useLocations()
 
@@ -15,40 +16,69 @@ export default function () {
   )
 
   useEffectExceptOnMount(() => {
-    ;(async () => {
-      actions.homeui.setState({ refreshButtonAnimation: true })
-      setCurrentDir((await api.get('api/dir' + locations.pathname)) as any)
-      actions.homeui.setState({ refreshButtonAnimation: false })
-    })()
+    setCurrentDir(api.get('api/dir' + locations.pathname) as any)
   }, [locations.paths])
 
   useEffectExceptOnMount(() => {
     if (locations.state !== 'refresh') return
     navigate(locations.pathname, { state: null, replace: true })
-    ;(async () => {
-      actions.homeui.setState({ refreshButtonAnimation: true })
-      setCurrentDir((await api.get('api/dir' + locations.pathname)) as any)
-      actions.homeui.setState({ refreshButtonAnimation: false })
-    })()
+    setCurrentDir(api.get('api/dir' + locations.pathname) as any)
   }, [locations.state])
 
   const api = useApi({ suspense: true })
 }
 
-export function setCurrentDir({
-  data,
-}: {
-  ok: boolean
-  data?: { dir: InfoDirWeb }
-}) {
-  data?.dir && actions.homeui.setState({ currentDir: data.dir })
+async function setCurrentDir(
+  response: Promise<{ ok: boolean; data: { dir: any } }>
+) {
+  $store.homeui.setState({ refreshButtonAnimation: true })
+  const dir = (await response).data.dir
+  dir && $store.homeui.setState({ currentDir: dir })
+  $store.homeui.setState({ refreshButtonAnimation: false })
 }
 
-export function setCurrentFile({
-  data,
-}: {
-  ok: boolean
-  data?: { file: InfoDetailedFile }
-}) {
-  data?.file && actions.homeui.setState({ currentFile: data.file })
+export function useGetContentData() {
+  const sortBy = $useStore((state) => state.homeui.config.sortBy)
+  const sortByMode = $useStore((state) => state.homeui.config.sortByMode)
+  const currentDir = $useStore((state) => state.homeui.status.currentDir)
+  const searchText = $useStore((state) => state.homeui.status.searchText)
+
+  const sortedDirs = useMemo(() => {
+    if (!currentDir) return []
+    const dirs = Object.values(currentDir.childDirs)
+    const searchTextLower = searchText.toLowerCase()
+
+    const searchedDirs = searchText
+      ? Object.values(currentDir.childDirs).filter((dir) =>
+          dir.name.toLowerCase().includes(searchTextLower)
+        )
+      : dirs
+
+    return sortByKey(
+      searchedDirs,
+      sortBy === 'size' ? 'name' : sortBy,
+      sortBy === 'size' ? 'asc' : sortByMode
+    )
+  }, [currentDir, sortBy, sortByMode, searchText])
+
+  const sortedFiles = useMemo(() => {
+    if (!currentDir) return []
+    const files = Object.values(currentDir.childFiles)
+    const searchTextLower = searchText.toLowerCase()
+
+    const searchedFiles = searchText
+      ? files.filter((file) =>
+          file.name.toLowerCase().includes(searchTextLower)
+        )
+      : files
+
+    return sortByKey(searchedFiles, sortBy, sortByMode)
+  }, [currentDir, sortBy, sortByMode, searchText])
+
+  const optimizedDir = useMemo(
+    () => ({ ...currentDir, sortedDirs, sortedFiles }),
+    [sortedDirs, sortedFiles]
+  )
+
+  return [optimizedDir, sortBy, sortByMode, searchText] as const
 }

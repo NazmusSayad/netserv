@@ -9,7 +9,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { IconButton, Modal } from '@mui/material'
 import { createSuspense } from '@/api/react'
 import PreviewFile from './PreviewFile'
-import { actions, useStore } from '@/store'
 import { LoadingSuspense } from '@/components/Loading'
 
 const PreviewModal = () => {
@@ -29,11 +28,11 @@ const PreviewModal = () => {
 function PreviewModalCore() {
   const location = useLocation()
   const navigate = useNavigate()
-  const currentFile = useStore((state) => state.homeui.status.currentFile)
+  const currentFile = $useStore((state) => state.homeui.status.currentFile)
 
   useEffect(
     () => () => {
-      actions.homeui.setState({ currentFile: null })
+      $store.homeui.setState({ currentFile: null })
     },
     []
   )
@@ -74,9 +73,11 @@ function PreviewModalCore() {
           </div>
         </div>
 
-        <div className={'overflow-x-hidden overflow-y-auto py-2 px-4'}>
-          <LoadingSuspense text={'Loading preview...'}>
-            <PreviewFetchData currentFile={currentFile} />
+        <div className={'overflow-x-hidden overflow-y-auto'}>
+          <LoadingSuspense text={'Loading file...'}>
+            <div className={'px-4 pb-4 pt-2 min-h-full grid'}>
+              <PreviewFetchData currentFile={currentFile} />
+            </div>
           </LoadingSuspense>
         </div>
       </div>
@@ -97,7 +98,7 @@ function PreviewFetchData({ currentFile }) {
   useSuspense(
     { url: 'api/file/' + location.pathname + '/' + fileName },
     ([file]) => {
-      file.ok && actions.homeui.setState({ currentFile: file.data.file })
+      file.ok && $store.homeui.setState({ currentFile: file.data.file })
     }
   )
 

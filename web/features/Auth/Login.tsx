@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import { FaRegEyeSlash, FaRegEye } from 'react-icons/fa'
 import { MdPerson } from 'react-icons/md'
 import { useApi } from '@/api/react'
-import { actions } from '@/store'
 import { LoadingSuspense } from '@/components/Loading'
 
 function LoginForm() {
@@ -26,7 +25,7 @@ function LoginForm() {
 
     if (data.jwt) {
       navigate('/')
-      actions.auth.login(data.jwt)
+      $store.auth.login(data.jwt)
     }
   }
 

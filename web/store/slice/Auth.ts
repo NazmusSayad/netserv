@@ -7,7 +7,7 @@ const initialState = {
 
 export default createSlice('auth', {
   initialState: { ...initialState },
-  reducers: {
+  actions: {
     login(state, jwt: string) {
       state.jwt = jwt
       state.authEnabled = true

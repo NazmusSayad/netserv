@@ -1,12 +1,133 @@
 import {
+  FcDocument,
   FcImageFile,
   FcAudioFile,
   FcVideoFile,
-  FcDocument,
 } from 'react-icons/fc'
+import { lazy } from 'react'
 import { IconType } from 'react-icons'
-import Image from '@/features/View/Image'
-import Text from '@/features/View/Text'
+const Image = lazy(() => import('@/features/View/Image'))
+const Text = lazy(() => import('@/features/View/Text'))
+
+const fileGroup: Record<string, FileSupport> = {
+  Image: {
+    IconComponent: FcImageFile,
+    ViewComponent: Image as ViewComponent,
+    extensions: new Set([
+      'jpg',
+      'jpeg',
+      'png',
+      'svg',
+      'webp',
+      'gif',
+      'bmp',
+      'tiff',
+      'ico',
+    ]),
+  },
+
+  Audio: {
+    IconComponent: FcAudioFile,
+    extensions: new Set([
+      'mp3',
+      'wav',
+      'aac',
+      'flac',
+      'ogg',
+      'wma',
+      'm4a',
+      'aiff',
+      'alac',
+    ]),
+  },
+
+  Video: {
+    IconComponent: FcVideoFile,
+    extensions: new Set([
+      'mp4',
+      'mkv',
+      'webm',
+      'avi',
+      'mov',
+      'wmv',
+      'flv',
+      'm4v',
+      'mpeg',
+      'mpg',
+    ]),
+  },
+
+  Text: {
+    IconComponent: FcDocument,
+    ViewComponent: Text as ViewComponent,
+    extensions: new Set([
+      'txt',
+      'js',
+      'ts',
+      'jsx',
+      'tsx',
+      'cjs',
+      'mjs',
+      'cts',
+      'mts',
+      'cjsx',
+      'mjsx',
+      'ctsx',
+      'mtsx',
+      'json',
+      'jsonp',
+      'md',
+      'yml',
+      'yaml',
+      'xml',
+      'csv',
+      'log',
+      'ini',
+      'rtf',
+      'html',
+      'htm',
+      'css',
+      'scss',
+      'less',
+      'sass',
+      'php',
+      'py',
+      'java',
+      'c',
+      'cpp',
+      'h',
+      'hpp',
+      'cs',
+      'sql',
+      'sh',
+      'bat',
+      'ps1',
+      'psm1',
+      'psd1',
+      'ps1xml',
+      'psrc',
+      'pssc',
+      'vbs',
+      'wsf',
+      'wsc',
+      'asp',
+      'aspx',
+      'jsp',
+      'jspx',
+      'erb',
+      'coffee',
+      'cson',
+      'iced',
+    ]),
+  },
+}
+
+export type ViewComponent = (props: { url: string }) => JSX.Element
+type FileSupport = {
+  extensions: Set<string>
+  IconComponent?: IconType
+  ViewComponent?: ViewComponent
+}
 
 export default function (ext: string) {
   for (const key in fileGroup) {
@@ -16,36 +137,4 @@ export default function (ext: string) {
       return value
     }
   }
-}
-
-export type ViewComponent = (props: { url: string }) => JSX.Element
-
-type FileSupport = {
-  extensions: Set<string>
-  IconComponent?: IconType
-  ViewComponent?: ViewComponent
-}
-
-const fileGroup: Record<string, FileSupport> = {
-  Image: {
-    ViewComponent: Image,
-    IconComponent: FcImageFile,
-    extensions: new Set(['jpg', 'jpeg', 'png', 'svg', 'webp']),
-  },
-
-  Audio: {
-    IconComponent: FcAudioFile,
-    extensions: new Set([]),
-  },
-
-  Video: {
-    IconComponent: FcVideoFile,
-    extensions: new Set([]),
-  },
-
-  Text: {
-    ViewComponent: Text,
-    IconComponent: FcDocument,
-    extensions: new Set(['txt', 'js', 'ts', 'jsx', 'tsx', 'json']),
-  },
 }

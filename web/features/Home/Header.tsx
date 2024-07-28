@@ -6,18 +6,18 @@ import {
 } from '@mui/material'
 import css from './CSS.module.css'
 import { CiGrid41 } from 'react-icons/ci'
-import { actions, useStore } from '@/store'
+import { VscTrash } from 'react-icons/vsc'
 import { RiRefreshLine } from 'react-icons/ri'
 import { HiOutlineBars4 } from 'react-icons/hi2'
+import HeaderActionMenu from './HeaderActionMenu'
 import useIsAnyItemSelected from './useIsAnyItemSelected'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { VscNewFile, VscNewFolder, VscTrash } from 'react-icons/vsc'
 
 const Header = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const selected = useIsAnyItemSelected()
-  const refreshButtonAnimation = useStore(
+  const refreshButtonAnimation = $useStore(
     (state) => state.homeui.status.refreshButtonAnimation
   )
 
@@ -25,7 +25,7 @@ const Header = () => {
     <div className="flex justify-between items-center">
       <div>
         <div className="flex items-center">
-          {selected ? <SelectedActionButtons /> : <DefaultActionButtons />}
+          {selected ? <SelectedActionButtons /> : <HeaderActionMenu />}
         </div>
       </div>
 
@@ -52,19 +52,6 @@ const Header = () => {
   )
 }
 
-const DefaultActionButtons = () => {
-  return (
-    <>
-      <Button size="small" color="inherit" startIcon={<VscNewFolder />}>
-        New Folder
-      </Button>
-      <Button size="small" color="inherit" startIcon={<VscNewFile />}>
-        New File
-      </Button>
-    </>
-  )
-}
-
 const SelectedActionButtons = () => {
   return (
     <>
@@ -76,7 +63,7 @@ const SelectedActionButtons = () => {
 }
 
 const ShowTypeChip = () => {
-  const showType = useStore((state) => state.homeui.config.showType)
+  const showType = $useStore((state) => state.homeui.config.showType)
 
   return (
     <ToggleButtonGroup>
@@ -84,7 +71,7 @@ const ShowTypeChip = () => {
         value="grid"
         selected={showType === 'grid'}
         disabled={showType === 'grid'}
-        onClick={() => actions.homeui.setConfig({ showType: 'grid' })}
+        onClick={() => $store.homeui.setConfig({ showType: 'grid' })}
         className="!p-1 !text-2xl"
       >
         <CiGrid41 />
@@ -94,7 +81,7 @@ const ShowTypeChip = () => {
         value="list"
         selected={showType === 'list'}
         disabled={showType === 'list'}
-        onClick={() => actions.homeui.setConfig({ showType: 'list' })}
+        onClick={() => $store.homeui.setConfig({ showType: 'list' })}
         className="!p-1 !text-2xl"
       >
         <HiOutlineBars4 />

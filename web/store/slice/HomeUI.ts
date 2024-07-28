@@ -6,10 +6,15 @@ export type InfoTargetWeb<T> = T & {
 
 const initialState = {
   status: {
-    wrapperPaddingWidth: 0,
+    searchText: '',
     refreshButtonAnimation: false,
     currentDir: null as InfoDirWeb | null,
     currentFile: null as InfoDetailedFile | null,
+    rowContextMenu: null as {
+      mouseX: number
+      mouseY: number
+      item: InfoChildDirWeb | InfoChildFileWeb
+    } | null,
   },
 
   config: {
@@ -29,7 +34,7 @@ const sessionState: typeof initialState = {
 
 export default createSlice('homeui', {
   initialState: { ...sessionState },
-  reducers: {
+  actions: {
     setState(state, status: Partial<(typeof initialState)['status']>) {
       for (const key in status) {
         state.status[key] = status[key]
