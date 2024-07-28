@@ -24,7 +24,7 @@ const AddressBar = () => {
 
       <div
         ref={addressContainerRef}
-        className={$tw(searchFocused ? 'hidden' : '', 'overflow-hidden')}
+        className={$tw(searchFocused && 'hidden', 'overflow-hidden')}
       >
         <div className="flex items-center h-full">
           {locations.paths.map((location, i) => {

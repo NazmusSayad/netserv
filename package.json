@@ -78,7 +78,7 @@
     "react-router-dom": "^6.22.0",
     "react-rtk": "^1.0.5",
     "react-syntax-highlighter": "^15.5.0",
-    "tailwind-variant-group": "^3.0.1",
+    "tailwind-variant-group": "^3.0.3",
     "tailwindcss": "^3.4.7",
     "typescript": "^5.5.2",
     "use-css-query": "^1.0.3",
