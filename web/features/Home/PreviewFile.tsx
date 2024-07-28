@@ -1,16 +1,17 @@
-import { makeFileUrl } from '@/api/react'
+import { getFsUrl } from '@/api/react'
 import fileSupport from '@/config/file-support'
 import { Button } from '@mui/material'
 import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { FcDownload } from 'react-icons/fc'
+import { downloadUsingDOM } from '@/utils/dom'
 
 const PreviewFile = () => {
   const file = $useStore((state) => state.homeui.status.currentFile)!
 
   const location = useLocation()
   const fsFileUrl = useMemo(
-    () => makeFileUrl(location.pathname, file.name),
+    () => getFsUrl(location.pathname, file.name),
     [file.name, location.pathname]
   )
 
@@ -40,7 +41,7 @@ const PreviewNotSupported = ({ url }: { url: string }) => {
         variant="contained"
         startIcon={<FcDownload />}
         onClick={() => {
-          console.log(url)
+          downloadUsingDOM(url)
         }}
       >
         Download

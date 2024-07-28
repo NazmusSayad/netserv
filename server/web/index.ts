@@ -28,7 +28,7 @@ arg.create(
     },
   },
   ([root = '.'], options) => {
-    // options.password = 'pass'
+    options.password = 'pass'
     const config = {
       ...options,
       root: path.resolve(root),
@@ -69,7 +69,13 @@ arg.create(
     apiRouter.use('/delete', fsDeleteRouter)
 
     app.use('/api', apiRouter)
-    app.use('/fs', express.static(path.resolve(root), { index: false }))
+    app.use(
+      '/fs',
+      express.static(path.resolve(root), {
+        index: false,
+        dotfiles: 'allow',
+      })
+    )
 
     function listen(name: string, port: number, host: string) {
       app.listen(port, host, async () => {

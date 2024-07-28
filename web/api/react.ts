@@ -16,7 +16,7 @@ const reactHTTP = ReactHTTP({
   },
 })
 
-export function makeFileUrl(pathname: string, name: string) {
+export function getFsUrl(pathname: string, name: string) {
   const names = ['fs', ...pathname.split('/'), name].filter(Boolean)
   return url + names.join('/')
 }

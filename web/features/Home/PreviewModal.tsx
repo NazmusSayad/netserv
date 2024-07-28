@@ -7,9 +7,10 @@ import {
 import { useEffect, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { IconButton, Modal } from '@mui/material'
-import { createSuspense } from '@/api/react'
+import { createSuspense, getFsUrl } from '@/api/react'
 import PreviewFile from './PreviewFile'
 import { LoadingSuspense } from '@/components/Loading'
+import { downloadUsingDOM } from '@/utils/dom'
 
 const PreviewModal = () => {
   const location = useLocation()
@@ -58,7 +59,14 @@ function PreviewModalCore() {
             <IconButton disabled={!currentFile}>
               <MdDriveFileRenameOutline />
             </IconButton>
-            <IconButton disabled={!currentFile}>
+            <IconButton
+              disabled={!currentFile}
+              onClick={() => {
+                downloadUsingDOM(
+                  getFsUrl(location.pathname, currentFile?.name!)
+                )
+              }}
+            >
               <MdOutlineDownload />
             </IconButton>
             <IconButton disabled={!currentFile} className={'text-red-500'}>

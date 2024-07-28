@@ -2,8 +2,13 @@ import { useMemo } from 'react'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { FaDownload } from 'react-icons/fa6'
+import { ImNewTab } from 'react-icons/im'
+import { getFsUrl } from '@/api/react'
+import { useLocation } from 'react-router-dom'
+import { downloadUsingDOM } from '@/utils/dom'
 
 export default function ContentContextMenu() {
+  const locationReact = useLocation()
   const contextMenu = $useStore((state) => state.homeui.status.rowContextMenu)
   const handleClose = () => {
     $store.homeui.setState({ rowContextMenu: null })
@@ -11,13 +16,26 @@ export default function ContentContextMenu() {
 
   const menuItems = useMemo(() => {
     return [
-      contextMenu?.item.type === 'file' && {
+      {
+        label: 'Open in new Tab',
+        icon: <ImNewTab />,
+        disabled: contextMenu?.item.type !== 'dir',
+        onClick() {
+          window.open(location.href + '/' + contextMenu?.item.name!)
+        },
+      },
+      {
         label: 'Download',
         icon: <FaDownload />,
-        onClick() {},
+        disabled: contextMenu?.item.type !== 'file',
+        onClick() {
+          downloadUsingDOM(
+            getFsUrl(locationReact.pathname, contextMenu?.item.name!)
+          )
+        },
       },
     ]
-  }, [contextMenu?.item])
+  }, [contextMenu?.item, locationReact.pathname])
 
   return (
     <Menu
@@ -38,6 +56,7 @@ export default function ContentContextMenu() {
           item && (
             <MenuItem
               key={item.label}
+              disabled={item.disabled}
               onClick={() => {
                 handleClose()
                 item.onClick()

@@ -25,7 +25,7 @@ const useSuspense = createSuspense()
 function AppInit() {
   useSuspense({ url: '/auth/init' }, ([{ data }]) => {
     if (data.authEnabled) {
-      data.jwt && $store.auth.login(data.jwt)
+      data.jwt ? $store.auth.login(data.jwt) : $store.auth.enableAuth()
     } else {
       $store.auth.disableAuth()
     }
