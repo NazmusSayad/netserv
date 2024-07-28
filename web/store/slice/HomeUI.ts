@@ -8,6 +8,7 @@ const initialState = {
   status: {
     searchText: '',
     refreshButtonAnimation: false,
+    renameItem: null as string | null,
     currentDir: null as InfoDirWeb | null,
     currentFile: null as InfoDetailedFile | null,
     rowContextMenu: null as {

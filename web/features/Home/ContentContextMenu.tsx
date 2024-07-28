@@ -6,6 +6,8 @@ import { ImNewTab } from 'react-icons/im'
 import { getFsUrl } from '@/api/react'
 import { useLocation } from 'react-router-dom'
 import { downloadUsingDOM } from '@/utils/dom'
+import { BiRename } from 'react-icons/bi'
+import { AiOutlineDelete } from 'react-icons/ai'
 
 export default function ContentContextMenu() {
   const locationReact = useLocation()
@@ -33,6 +35,16 @@ export default function ContentContextMenu() {
             getFsUrl(locationReact.pathname, contextMenu?.item.name!)
           )
         },
+      },
+      {
+        label: 'Rename',
+        icon: <BiRename />,
+        onClick() {},
+      },
+      {
+        label: 'Delete',
+        icon: <AiOutlineDelete />,
+        onClick() {},
       },
     ]
   }, [contextMenu?.item, locationReact.pathname])
