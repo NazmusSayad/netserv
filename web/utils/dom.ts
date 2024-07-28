@@ -15,11 +15,18 @@ export function getScrollBarWidth() {
 }
 
 export async function downloadUsingDOM(url: string) {
-  const res = await fetch(url, { credentials: 'include' })
-  const blob = await res.blob()
-  const blobUrl = URL.createObjectURL(blob)
   const a = document.createElement('a')
-  a.href = blobUrl
+  a.href = url
+  a.style.display = 'none'
   a.download = url.split('/').pop() ?? 'download'
+
+  if (!url.startsWith(location.origin)) {
+    a.target = '_blank'
+  }
+
+  document.body.appendChild(a)
   a.click()
+  document.body.removeChild(a)
+
+  URL.revokeObjectURL(a.href)
 }
