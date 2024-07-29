@@ -19,8 +19,11 @@ export function getInfoDir(target: string): InfoDirServer {
   const childFiles: InfoDirServer['childFiles'] = {}
 
   children.forEach((name) => {
+    if (name.startsWith('$RECYCLE.BIN')) return
+
     const childPath = path.join(target, name)
     const stats = fs.statSync(childPath)
+
     if (stats.isDirectory()) {
       childDirs[name] = getInfoDirBasic(childPath)
     } else {
