@@ -170,7 +170,6 @@ const TableItem = ({
           ) : (
             data.name
           )}
-          <input type="text" value={data.name} className={'bg-transparent'} />
         </div>
       </div>
 
