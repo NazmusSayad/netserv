@@ -86,7 +86,7 @@ function AddressBarSearch({ searchFocused, setSearchFocused }) {
           },
         }}
         onChange={(e) => {
-          $store.homeui.setState({ searchText: e.target.value })
+          $actions.homeui.setState({ searchText: e.target.value })
         }}
       />
 

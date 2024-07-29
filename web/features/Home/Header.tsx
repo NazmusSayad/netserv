@@ -71,7 +71,7 @@ const ShowTypeChip = () => {
         value="grid"
         selected={showType === 'grid'}
         disabled={showType === 'grid'}
-        onClick={() => $store.homeui.setConfig({ showType: 'grid' })}
+        onClick={() => $actions.homeui.setConfig({ showType: 'grid' })}
         className="!p-1 !text-2xl"
       >
         <CiGrid41 />
@@ -81,7 +81,7 @@ const ShowTypeChip = () => {
         value="list"
         selected={showType === 'list'}
         disabled={showType === 'list'}
-        onClick={() => $store.homeui.setConfig({ showType: 'list' })}
+        onClick={() => $actions.homeui.setConfig({ showType: 'list' })}
         className="!p-1 !text-2xl"
       >
         <HiOutlineBars4 />

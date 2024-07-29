@@ -33,7 +33,7 @@ function PreviewModalCore() {
 
   useEffect(
     () => () => {
-      $store.homeui.setState({ currentFile: null })
+      $actions.homeui.setState({ currentFile: null })
     },
     []
   )
@@ -106,7 +106,7 @@ function PreviewFetchData({ currentFile }) {
   useSuspense(
     { url: 'api/file/' + location.pathname + '/' + fileName },
     ([file]) => {
-      file.ok && $store.homeui.setState({ currentFile: file.data.file })
+      file.ok && $actions.homeui.setState({ currentFile: file.data.file })
     }
   )
 

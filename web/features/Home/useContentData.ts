@@ -31,10 +31,10 @@ export function useFetchContentData() {
 async function setCurrentDir(
   response: Promise<{ ok: boolean; data: { dir: any } }>
 ) {
-  $store.homeui.setState({ refreshButtonAnimation: true })
+  $actions.homeui.setState({ refreshButtonAnimation: true })
   const dir = (await response).data.dir
-  dir && $store.homeui.setState({ currentDir: dir })
-  $store.homeui.setState({ refreshButtonAnimation: false })
+  dir && $actions.homeui.setState({ currentDir: dir })
+  $actions.homeui.setState({ refreshButtonAnimation: false })
 }
 
 export function useGetContentData() {

@@ -13,7 +13,7 @@ export default function ContentContextMenu() {
   const locationReact = useLocation()
   const contextMenu = $useStore((state) => state.homeui.status.rowContextMenu)
   const handleClose = () => {
-    $store.homeui.setState({ rowContextMenu: null })
+    $actions.homeui.setState({ rowContextMenu: null })
   }
 
   const menuItems = useMemo(() => {

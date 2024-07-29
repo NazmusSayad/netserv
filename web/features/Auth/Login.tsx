@@ -25,7 +25,7 @@ function LoginForm() {
 
     if (data.jwt) {
       navigate('/')
-      $store.auth.login(data.jwt)
+      $actions.auth.login(data.jwt)
     }
   }
 

@@ -58,11 +58,11 @@ const TableHeader = () => {
   function generateClickHandler(name: typeof sortBy) {
     return () => {
       if (name === sortBy) {
-        $store.homeui.setConfig({
+        $actions.homeui.setConfig({
           sortBy: name,
           sortByMode: sortByMode === 'asc' ? 'dsc' : 'asc',
         })
-      } else $store.homeui.setConfig({ sortBy: name })
+      } else $actions.homeui.setConfig({ sortBy: name })
     }
   }
 
@@ -85,8 +85,8 @@ const TableHeader = () => {
         checked={isAnySelected}
         onChange={() => {
           isAnySelected
-            ? $store.homeui.unselectAllItems()
-            : $store.homeui.selectAllItems()
+            ? $actions.homeui.unselectAllItems()
+            : $actions.homeui.selectAllItems()
         }}
       />
 
@@ -144,7 +144,7 @@ const TableItem = ({
       onClick={() => navigate(data.name)}
       onContextMenu={(e) => {
         e.preventDefault()
-        $store.homeui.setState({
+        $actions.homeui.setState({
           rowContextMenu: {
             item: data,
             mouseX: e.clientX,
@@ -158,7 +158,7 @@ const TableItem = ({
         size="small"
         onClick={(e) => {
           e.stopPropagation()
-          $store.homeui.toggleItem(data.name)
+          $actions.homeui.toggleItem(data.name)
         }}
       />
 
