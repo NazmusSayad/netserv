@@ -16,7 +16,7 @@ const PreviewModal = () => {
   const location = useLocation()
 
   const fileNameExistsInQuery = useMemo(() => {
-    return location.search.includes('file=')
+    return location.search.match(/file\=./)
   }, [location.search])!
 
   return (

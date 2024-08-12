@@ -4,36 +4,26 @@ import { FaPlus } from 'react-icons/fa6'
 import { Button, IconButton } from '@mui/material'
 import { useMemo, useState } from 'react'
 import useCssQuery from 'use-css-query'
-import {
-  MdUploadFile,
-  MdOutlineCreateNewFolder,
-  MdOutlineDriveFolderUpload,
-} from 'react-icons/md'
+import { MdUploadFile, MdOutlineCreateNewFolder } from 'react-icons/md'
 
 export default function HeaderActionMenu() {
-  const matches = useCssQuery('(max-width: 38rem)')
+  const matches = useCssQuery('(max-width: 28rem)')
 
   const data = useMemo(() => {
     return [
       {
+        label: 'Upload',
+        icon: <MdUploadFile />,
+        onClick: () => {
+          $actions.homeui.setState({ uploadModal: true })
+        },
+      },
+
+      {
         label: 'New Folder',
         icon: <MdOutlineCreateNewFolder />,
         onClick: () => {
-          console.log('New Folder')
-        },
-      },
-      {
-        label: 'Upload Folders',
-        icon: <MdOutlineDriveFolderUpload />,
-        onClick: () => {
-          console.log('Upload Folders')
-        },
-      },
-      {
-        label: 'Upload Files',
-        icon: <MdUploadFile />,
-        onClick: () => {
-          console.log('Upload Files')
+          $actions.homeui.setState({ newFolderModal: true })
         },
       },
     ]

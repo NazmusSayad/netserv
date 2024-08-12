@@ -6,9 +6,15 @@ import * as express from 'express'
 import extrass, { catchError } from 'extrass'
 import arg from '../arg'
 import app from './express'
-import { apiRouter, authRouter, staticRouter } from './router'
+import {
+  apiRouter,
+  authRouter,
+  createSuperApiRoute,
+  staticRouter,
+} from './router'
 import generateFsController from './controller/fs'
 import generateAuthController from './controller/auth'
+import multer = require('multer')
 
 arg.create(
   'web',
@@ -39,6 +45,7 @@ arg.create(
 
     const authController = catchError(generateAuthController(config))
     const fsController = catchError(generateFsController(config))
+    const multerParser = multer({ storage: multer.memoryStorage() })
 
     // Setup auth router
     if (config.authEnabled) authRouter.post('/login', authController.login)
@@ -53,20 +60,12 @@ arg.create(
     app.use(authController.checkAuthMiddleware)
 
     // Setup API router
-    const fsDirRouter = express.Router()
-    const fsFileRouter = express.Router()
-    const fsRenameRouter = express.Router()
-    const fsDeleteRouter = express.Router()
-
-    fsDirRouter.get('*', fsController.fsGetDir)
-    fsFileRouter.get('*', fsController.fsGetFile)
-    fsRenameRouter.post('*', fsController.rename)
-    fsDeleteRouter.post('*', fsController.delete)
-
-    apiRouter.use('/dir', fsDirRouter)
-    apiRouter.use('/file', fsFileRouter)
-    apiRouter.use('/rename', fsRenameRouter)
-    apiRouter.use('/delete', fsDeleteRouter)
+    createSuperApiRoute('/dir', 'get', fsController.fsGetDir)
+    createSuperApiRoute('/file', 'get', fsController.fsGetFile)
+    createSuperApiRoute('/rename', 'post', fsController.rename)
+    createSuperApiRoute('/delete', 'post', fsController.delete)
+    createSuperApiRoute('/upload', 'post', fsController.upload)
+    createSuperApiRoute('/new-folder', 'post', fsController.newFolder)
 
     app.use('/api', apiRouter)
     app.use(

@@ -40,7 +40,7 @@ export function getInfoFile(target: string): InfoDetailedFile {
   return {
     type: 'file',
     name: path.basename(target),
-    ext: path.extname(target).slice(1),
+    ext: path.extname(target).slice(1) || path.basename(target).slice(1),
     size: stats.size,
     createdAt: stats.birthtime,
     modifiedAt: stats.mtime,

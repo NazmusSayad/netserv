@@ -40,5 +40,9 @@ export default createGenerator(function (config: WebAppOptions) {
 
       res.json({ success: true })
     },
+
+    upload(req, res) {},
+
+    newFolder(req, res) {},
   }
 })

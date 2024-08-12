@@ -7,6 +7,8 @@ export type InfoTargetWeb<T> = T & {
 const initialState = {
   status: {
     searchText: '',
+    uploadModal: false,
+    newFolderModal: false,
     refreshButtonAnimation: false,
     renameItem: null as string | null,
     currentDir: null as InfoDirWeb | null,

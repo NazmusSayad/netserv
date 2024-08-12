@@ -5,6 +5,8 @@ import AddressBar from './AddressBar'
 import Wrapper from './Wrapper'
 import Header from './Header'
 import ContentContextMenu from './ContentContextMenu'
+import UploadModal from './UploadModal'
+import NewFolderModal from './NewFolderModal'
 const Content = lazy(() => import('./Content'))
 
 const Home = () => {
@@ -32,7 +34,9 @@ const Home = () => {
         </LoadingSuspense>
       </div>
 
+      <UploadModal />
       <PreviewModal />
+      <NewFolderModal />
       <ContentContextMenu />
     </div>
   )
