@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { createGenerator, WebAppOptions } from '../config'
-import { getInfoDir, getInfoFile } from '../getInfo'
+import { getInfoDir, getInfoDirBasic, getInfoFile } from '../getInfo'
 
 export default createGenerator(function (config: WebAppOptions) {
   return {
@@ -41,8 +41,23 @@ export default createGenerator(function (config: WebAppOptions) {
       res.json({ success: true })
     },
 
-    upload(req, res) {},
+    upload(req, res) {
+      console.log('File', req.file)
+      console.log('Files', req.files)
 
-    newFolder(req, res) {},
+      res.json({ success: true })
+    },
+
+    newFolder(req, res) {
+      try {
+        const newFolderPath = path.join(config.root, req.url, req.body.name)
+        fs.mkdirSync(newFolderPath)
+        res.json(getInfoDirBasic(newFolderPath))
+      } catch (err: any) {
+        res.status(400).json({
+          error: err.message?.split(',')[0] ?? 'Failed to create folder',
+        })
+      }
+    },
   }
 })

@@ -34,7 +34,7 @@ arg.create(
     },
   },
   ([root = '.'], options) => {
-    options.password = 'pass'
+    // options.password = 'pass'
     const config = {
       ...options,
       root: path.resolve(root),

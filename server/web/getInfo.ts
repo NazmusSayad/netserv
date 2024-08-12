@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-function getInfoDirBasic(target: string): InfoChildDirServer {
+export function getInfoDirBasic(target: string): InfoChildDirServer {
   const stats = fs.statSync(target)
 
   return {

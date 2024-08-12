@@ -12,7 +12,9 @@ const reactHTTP = ReactHTTP({
   },
 
   formatError(err: any) {
-    return err.response?.data?.error
+    return (
+      err.response?.data?.error || err.response?.data?.message || err.message
+    )
   },
 })
 

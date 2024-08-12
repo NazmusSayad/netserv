@@ -102,5 +102,11 @@ export default createSlice('homeui', {
         delete state.status.currentDir.childFiles[name]
       }
     },
+
+    createDir(state, dir: InfoChildDirWeb) {
+      if (!state.status.currentDir) return
+
+      state.status.currentDir.childDirs[dir.name] = dir
+    },
   },
 })
