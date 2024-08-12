@@ -1,17 +1,12 @@
-import {
-  Button,
-  IconButton,
-  ToggleButton,
-  ToggleButtonGroup,
-} from '@mui/material'
+import { IconButton, ToggleButton, ToggleButtonGroup } from '@mui/material'
 import css from './CSS.module.css'
 import { CiGrid41 } from 'react-icons/ci'
-import { VscTrash } from 'react-icons/vsc'
 import { RiRefreshLine } from 'react-icons/ri'
 import { HiOutlineBars4 } from 'react-icons/hi2'
 import HeaderActionMenu from './HeaderActionMenu'
 import useIsAnyItemSelected from './useIsAnyItemSelected'
 import { useLocation, useNavigate } from 'react-router-dom'
+import HeaderActionSelected from './HeaderActionSelected'
 
 const Header = () => {
   const location = useLocation()
@@ -25,7 +20,7 @@ const Header = () => {
     <div className="flex justify-between items-center">
       <div>
         <div className="flex items-center">
-          {selected ? <SelectedActionButtons /> : <HeaderActionMenu />}
+          {selected ? <HeaderActionSelected /> : <HeaderActionMenu />}
         </div>
       </div>
 
@@ -49,16 +44,6 @@ const Header = () => {
         </IconButton>
       </div>
     </div>
-  )
-}
-
-const SelectedActionButtons = () => {
-  return (
-    <>
-      <Button size="small" color="inherit" startIcon={<VscTrash />}>
-        Delete
-      </Button>
-    </>
   )
 }
 

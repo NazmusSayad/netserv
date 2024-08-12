@@ -61,7 +61,7 @@ arg.create(
     fsDirRouter.get('*', fsController.fsGetDir)
     fsFileRouter.get('*', fsController.fsGetFile)
     fsRenameRouter.post('*', fsController.rename)
-    fsDeleteRouter.delete('*', fsController.delete)
+    fsDeleteRouter.post('*', fsController.delete)
 
     apiRouter.use('/dir', fsDirRouter)
     apiRouter.use('/file', fsFileRouter)

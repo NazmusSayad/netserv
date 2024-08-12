@@ -30,7 +30,14 @@ export default createGenerator(function (config: WebAppOptions) {
 
     delete(req, res) {
       const targetPath = path.join(config.root, req.path)
-      fs.unlinkSync(targetPath)
+      const files = req.body?.names?.map((name: string) =>
+        path.join(targetPath, name)
+      )
+
+      for (const file of files) {
+        fs.unlinkSync(file)
+      }
+
       res.json({ success: true })
     },
   }

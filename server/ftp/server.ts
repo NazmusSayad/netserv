@@ -13,7 +13,8 @@ type FTPConfig = {
 
 export default function (config: FTPConfig) {
   const url = `ftp://${config.host}:${config.port}`
-  const ftpServer = new FtpSrv(url, {
+  const ftpServer = new FtpSrv({
+    url,
     anonymous: !(config.username || config.password),
     log: bunyan.createLogger({ name: 'ftp-server', level: 'fatal' }),
   })

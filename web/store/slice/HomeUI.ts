@@ -91,5 +91,14 @@ export default createSlice('homeui', {
         state.status.currentDir.childFiles[key].selected = false
       }
     },
+
+    deleteItems(state, names: string[]) {
+      if (!state.status.currentDir) return
+
+      for (const name of names) {
+        delete state.status.currentDir.childDirs[name]
+        delete state.status.currentDir.childFiles[name]
+      }
+    },
   },
 })
