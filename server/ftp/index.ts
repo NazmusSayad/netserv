@@ -15,8 +15,6 @@ arg.create(
     },
   },
   (_, options) => {
-    console.log({ options })
-
     if (options.username && !options.password) {
       throw new Error('Password is required if username is provided')
     }

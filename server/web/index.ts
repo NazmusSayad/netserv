@@ -3,9 +3,9 @@ import * as os from 'os'
 import * as path from 'path'
 import * as qrcode from 'qrcode'
 import * as express from 'express'
-import extrass, { catchError } from 'extrass'
+import { catchError } from 'extrass'
 import arg from '../arg'
-import app from './express'
+import { app, customExtrass } from './express'
 import {
   apiRouter,
   authRouter,
@@ -43,8 +43,6 @@ arg.create(
       root: path.resolve(root),
       authEnabled: !!options.password,
     }
-
-    console.log(config, '\n')
 
     const authController = catchError(generateAuthController(config))
     const fsController = catchError(generateFsController(config))
@@ -108,7 +106,11 @@ arg.create(
       })
     }
 
-    extrass(app)
+    app.use((_, res, next) => {
+      if (!res.headersSent) next()
+    })
+
+    customExtrass.handle(app)
     if (config.host) {
       listen('Custom Address', config.port, config.host)
     } else if (config.host) {

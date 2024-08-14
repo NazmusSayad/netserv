@@ -8,9 +8,6 @@ export default createGenerator(function (config: WebAppOptions) {
         return res.status(400).json({ error: 'No login needed!' })
       }
 
-      console.log('Login attempt:', req.body.password)
-      console.log('Correct password', config.password)
-
       if (!req.body.password) {
         return res.status(400).json({ error: 'No password provided' })
       }
@@ -29,8 +26,6 @@ export default createGenerator(function (config: WebAppOptions) {
     },
 
     init(req, res) {
-      console.log('Authenticating with password:', config.authEnabled)
-
       const configResponse = {
         writable: config.writable,
         authEnabled: config.authEnabled,
@@ -41,7 +36,6 @@ export default createGenerator(function (config: WebAppOptions) {
       }
 
       const jwtCookie = req.cookies.jwt
-      console.log('JWT Cookie:', jwtCookie)
 
       let jwtCookieValid = false
       if (jwtCookie) {
@@ -67,8 +61,6 @@ export default createGenerator(function (config: WebAppOptions) {
     },
 
     checkAuthMiddleware(req, res, next) {
-      console.log('Authenticating with password:', config.authEnabled)
-
       if (!config.authEnabled) {
         return next()
       }

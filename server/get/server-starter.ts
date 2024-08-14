@@ -9,8 +9,6 @@ export type GetConfig = {
 }
 
 export default async function (config: GetConfig) {
-  console.log('get', config)
-
   app.post('/upload', upload(config))
 
   const networks = os.networkInterfaces()

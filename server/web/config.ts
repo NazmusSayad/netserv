@@ -1,7 +1,6 @@
 import { Handler } from 'express'
 import * as path from 'path'
 export const WEB_APP_DIR = path.join(__dirname, '../../web')
-console.log({ WEB_APP_DIR })
 
 export type WebAppOptions = {
   root: string
