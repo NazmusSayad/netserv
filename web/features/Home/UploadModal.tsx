@@ -7,7 +7,7 @@ import { MdFolderOpen, MdFileOpen, MdUpload, MdClose } from 'react-icons/md'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { RiRefreshLine } from 'react-icons/ri'
 import useFileDrop from './useFileDrop'
-import { RiDragDropLine } from 'react-icons/ri'
+import { TbDragDrop } from 'react-icons/tb'
 
 export default function UploadModal() {
   const navigate = useNavigate()
@@ -173,7 +173,7 @@ function UploadModalCore({
           <div className={'flex flex-col items-center h-full w-full'}>
             <div className={'w-full m-auto text-center'}>
               <div className={'mb-6'}>
-                <RiDragDropLine className={'size-[30%] m-auto text-white/30'} />
+                <TbDragDrop className={'size-[30%] m-auto text-white/30'} />
               </div>
 
               <p className={'text-white/70'}>
