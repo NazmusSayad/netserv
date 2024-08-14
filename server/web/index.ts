@@ -36,7 +36,7 @@ arg.create(
   },
   ([root = '.'], options) => {
     // options.password = 'pass'
-    options.writable = true
+    // options.writable = true
 
     const config = {
       ...options,

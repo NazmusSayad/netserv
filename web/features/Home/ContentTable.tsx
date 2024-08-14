@@ -9,7 +9,7 @@ import fileSupport from '@/config/file-support'
 import { formatDate } from '@/utils/date'
 import { FcFolder } from 'react-icons/fc'
 import { MouseEventHandler } from 'react'
-import { ButtonBase, Checkbox } from '@mui/material'
+import { Button, Checkbox } from '@mui/material'
 import { FcFile } from 'react-icons/fc'
 import { formatBytesToUnit } from '@/utils'
 import { useGetContentData } from './useContentData'
@@ -68,9 +68,9 @@ const TableHeader = () => {
 
   const sortByModeElement =
     sortByMode == 'asc' ? (
-      <MdKeyboardDoubleArrowDown />
+      <MdKeyboardDoubleArrowDown className={'mt-[-.2rem] h-4'} />
     ) : (
-      <MdKeyboardDoubleArrowUp />
+      <MdKeyboardDoubleArrowUp className={'mt-[-.2rem] h-4'} />
     )
 
   return (
@@ -90,35 +90,32 @@ const TableHeader = () => {
         }}
       />
 
-      <ButtonBase
+      <Button
+        color={'inherit'}
         className={'!px-2 size-full !text-right !justify-start'}
         onClick={generateClickHandler('name')}
+        endIcon={sortBy === 'name' && sortByModeElement}
       >
-        <div className={'flex justify-between items-center w-full'}>
-          <div className={'font-medium'}>Name</div>
-          {sortBy === 'name' && sortByModeElement}
-        </div>
-      </ButtonBase>
+        <div className={'font-medium'}>Name</div>
+      </Button>
 
-      <ButtonBase
+      <Button
+        color={'inherit'}
         className={'!px-2 size-full !text-right !justify-end'}
         onClick={generateClickHandler('size')}
+        startIcon={sortBy === 'size' && sortByModeElement}
       >
-        <div className={'flex justify-end items-center w-full'}>
-          {sortBy === 'size' && sortByModeElement}
-          <div className={'font-medium'}>Size</div>
-        </div>
-      </ButtonBase>
+        <div className={'font-medium'}>Size</div>
+      </Button>
 
-      <ButtonBase
-        className={'!px-2 size-full !text-right !justify-end'}
+      <Button
+        color={'inherit'}
+        className={'!px-2 size-full !text-right !justify-end text-nowrap'}
         onClick={generateClickHandler('modifiedAt')}
+        startIcon={sortBy === 'modifiedAt' && sortByModeElement}
       >
-        <div className={'flex justify-end items-center w-full'}>
-          {sortBy === 'modifiedAt' && sortByModeElement}
-          <div className={'font-medium'}>Modified At</div>
-        </div>
-      </ButtonBase>
+        <div className={'font-medium'}>Modified At</div>
+      </Button>
     </Row>
   )
 }
@@ -169,7 +166,7 @@ const TableItem = ({
         {data.type === 'file' && formatBytesToUnit(data.size)}
       </span>
 
-      <span className={'opacity-80 text-sm'}>
+      <span className={'opacity-80 text-xs'}>
         {formatDate(data.modifiedAt)}
       </span>
     </Row>
