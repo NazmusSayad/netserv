@@ -85,42 +85,48 @@ arg.create(
       })
     )
 
-    function listen(name: string, port: number, host: string) {
-      app.listen(port, host, async () => {
-        const url = `http://${host}:${port}`
-
-        // Text output
-        console.log(
-          `${'\x1b[0m\x1b[34m\x1b[1m'}Server name: \x1b[0m\x1b[34m${name}\x1b[0m`
-        )
-        console.log(`URL: \x1b[32m${url}\x1b[0m`)
-
-        // QR code output
-        if (config.qr) {
-          const qrCodeText = await qrcode.toString(url, {
-            type: 'terminal',
-            small: true,
-          })
-          console.log(qrCodeText)
-        }
-      })
-    }
-
     app.use((_, res, next) => {
       if (!res.headersSent) next()
     })
 
     customExtrass.handle(app)
-    if (config.host) {
-      listen('Custom Address', config.port, config.host)
-    } else if (config.host) {
-      listen('Custom Host', config.port, config.host)
-    } else {
-      const networkEntries = Object.entries(os.networkInterfaces())
-      for (const [key, addresses] of networkEntries) {
-        const ipv4 = addresses?.find((x) => x.family === 'IPv4')
-        ipv4 && listen(key, config.port, ipv4?.address)
+    ;(async () => {
+      function listen(name: string, port: number, host: string) {
+        return new Promise<void>((resolve) => {
+          app.listen(port, host, async () => {
+            const url = `http://${host}:${port}`
+
+            // Text output
+            console.log(
+              `${'\x1b[0m\x1b[34m\x1b[1m'}Server name: \x1b[0m\x1b[34m${name}\x1b[0m`
+            )
+            console.log(`URL: \x1b[32m${url}\x1b[0m`)
+
+            // QR code output
+            if (config.qr) {
+              const qrCodeText = await qrcode.toString(url, {
+                type: 'terminal',
+                small: true,
+              })
+
+              console.log(qrCodeText)
+              resolve()
+            }
+          })
+        })
       }
-    }
+
+      if (config.host) {
+        listen('Custom Address', config.port, config.host)
+      } else if (config.host) {
+        listen('Custom Host', config.port, config.host)
+      } else {
+        const networkEntries = Object.entries(os.networkInterfaces())
+        for (const [key, addresses] of networkEntries) {
+          const ipv4 = addresses?.find((x) => x.family === 'IPv4')
+          ipv4 && (await listen(key, config.port, ipv4?.address))
+        }
+      }
+    })()
   }
 )
