@@ -13,9 +13,9 @@ staticRouter.use(express.static(WEB_APP_DIR, { maxAge: 1 }), (_, res) =>
 export function createSuperApiRoute(
   path: string,
   method: 'get' | 'post',
-  handler: express.Handler
+  ...handlers: express.Handler[]
 ) {
   const router = express.Router()
-  router[method]('*', handler)
+  router[method]('*', ...handlers)
   apiRouter.use(path, router)
 }

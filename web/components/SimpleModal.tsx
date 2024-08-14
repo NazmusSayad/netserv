@@ -27,7 +27,14 @@ export default function SimpleModal(props: Props) {
             </div>
           </div>
 
-          <div className={'p-4 pt-2 overflow-auto'}>{props.children}</div>
+          <div
+            className={$tw(
+              'overflow-auto',
+              props.disableContentPadding || 'p-4 pt-2'
+            )}
+          >
+            {props.children}
+          </div>
         </div>
       </div>
     </Modal>
@@ -40,4 +47,5 @@ type Props = {
   header?: React.ReactElement | string | React.ReactElement[]
   close?: () => void
   containerClassName?: any
+  disableContentPadding?: boolean
 }

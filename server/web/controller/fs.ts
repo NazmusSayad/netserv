@@ -14,7 +14,7 @@ export default createGenerator(function (config: WebAppOptions) {
     },
 
     fsGetFile(req, res) {
-      const targetPath = path.join(config.root, req.path)
+      const targetPath = path.join(config.root, decodeURIComponent(req.path))
       const stats = fs.statSync(targetPath, { throwIfNoEntry: false })
       return res.json({
         file: stats?.isFile() ? getInfoFile(targetPath) : null,
@@ -35,16 +35,25 @@ export default createGenerator(function (config: WebAppOptions) {
       )
 
       for (const file of files) {
-        fs.unlinkSync(file)
+        const stats = fs.statSync(file, { throwIfNoEntry: false })
+        if (!stats) continue
+
+        if (stats.isFile()) fs.unlinkSync(file)
+        else fs.rmSync(file, { recursive: true, force: true })
       }
 
       res.json({ success: true })
     },
 
     upload(req, res) {
-      console.log('File', req.file)
-      console.log('Files', req.files)
+      const filePath = path.join(config.root, req.path, req.body.path)
+      const fileDirPath = path.dirname(filePath)
 
+      if (!fs.existsSync(fileDirPath)) {
+        fs.mkdirSync(fileDirPath, { recursive: true })
+      }
+
+      fs.writeFileSync(filePath, req.file!.buffer)
       res.json({ success: true })
     },
 

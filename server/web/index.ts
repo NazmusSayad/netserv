@@ -64,8 +64,13 @@ arg.create(
     createSuperApiRoute('/file', 'get', fsController.fsGetFile)
     createSuperApiRoute('/rename', 'post', fsController.rename)
     createSuperApiRoute('/delete', 'post', fsController.delete)
-    createSuperApiRoute('/upload', 'post', fsController.upload)
     createSuperApiRoute('/new-folder', 'post', fsController.newFolder)
+    createSuperApiRoute(
+      '/upload',
+      'post',
+      multerParser.single('file'),
+      fsController.upload
+    )
 
     app.use('/api', apiRouter)
     app.use(
