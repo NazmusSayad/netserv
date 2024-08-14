@@ -100,6 +100,12 @@ const fileGroup: Record<string, FileSupport> = {
       'cs',
       'sql',
       'sh',
+      'bash',
+      'zsh',
+      'fish',
+      'bashrc',
+      'bash_profile',
+      'profile',
       'cmd',
       'bat',
       'ps1',
@@ -136,7 +142,6 @@ const fileGroup: Record<string, FileSupport> = {
       'npmrc',
       'npmignore',
       'yarnrc',
-      
     ]),
   },
 }
