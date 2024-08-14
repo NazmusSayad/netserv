@@ -57,6 +57,23 @@ export default function UploadModal() {
             return prev.filter((f) => f.path !== path)
           })
         }}
+        setError={(path, error) => {
+          setFiles((prev) => {
+            return prev.map((f) => {
+              if (f.path === path) return { ...f, error, force: false }
+              return f
+            })
+          })
+        }}
+        forceUpload={(path) => {
+          setFiles((prev) => {
+            return prev.map((f) => {
+              if (f.path === path)
+                return { ...f, force: true, error: undefined }
+              return f
+            })
+          })
+        }}
       />
     </SimpleModal>
   )
@@ -65,7 +82,9 @@ export default function UploadModal() {
 function UploadModalCore({
   files,
   addFile,
+  setError,
   removeFile,
+  forceUpload,
   currentLoading,
   setCurrentLoading,
 }: FilesProp & {
@@ -76,43 +95,70 @@ function UploadModalCore({
   const location = useLocation()
 
   async function startUpload() {
-    for (const { path, file } of files) {
+    let hasError = false
+
+    for (const { path, file, force } of files) {
       setCurrentLoading(path)
       const formData = new FormData()
       formData.append('path', path)
       formData.append('file', file)
-      await api.post('/api/upload' + location.pathname, formData)
-      removeFile(path)
+      formData.append('force', force ? 'true' : 'false')
+
+      const res = await await api.post(
+        '/api/upload' + location.pathname,
+        formData
+      )
+
       setCurrentLoading('')
+      if (res.ok) removeFile(path)
+      else {
+        setError(path, res.error)
+        hasError = true
+      }
     }
 
-    $actions.homeui.setState({ uploadModal: false })
+    hasError || $actions.homeui.setState({ uploadModal: false })
   }
 
   return (
     <div className={'grid auto-rows-[1fr_auto] h-full'}>
       <div className={'overflow-auto py-2'}>
-        {files.map(({ path, file }, index) => (
+        {files.map(({ path, file, error, force }, index) => (
           <div
             key={index}
             className={'flex justify-between items-center pr-1 px-4 mb-1 gap-2'}
           >
-            <div className={'flex justify-between items-center w-full'}>
-              <p>{path || file.name}</p>
+            <div
+              title={error}
+              className={$tw(
+                'flex justify-between items-center w-full',
+                !!error && 'text-red-500 line-through',
+                force && 'text-blue-500'
+              )}
+            >
+              <p>{path}</p>
               <p>{formatBytesToUnit(file.size)}</p>
             </div>
 
-            <IconButton
-              size={'small'}
-              onClick={() => removeFile(path)}
-              disabled={path === currentLoading}
-            >
-              {path === currentLoading ? (
-                <RiRefreshLine className={'animate-spin text-gray-200'} />
-              ) : (
-                <MdClose className={'text-red-500'} />
+            <div className={'flex items-center'}>
+              {error && (
+                <Button size={'small'} onClick={() => forceUpload(path)}>
+                  Force
+                </Button>
               )}
-            </IconButton>
+
+              <IconButton
+                size={'small'}
+                onClick={() => removeFile(path)}
+                disabled={path === currentLoading}
+              >
+                {path === currentLoading ? (
+                  <RiRefreshLine className={'animate-spin text-gray-200'} />
+                ) : (
+                  <MdClose className={'text-red-500'} />
+                )}
+              </IconButton>
+            </div>
           </div>
         ))}
       </div>
@@ -194,7 +240,9 @@ function ModalBottomActions({
 }
 
 type FilesProp = {
-  files: { path: string; file: File }[]
+  files: { path: string; file: File; error?: string; force?: boolean }[]
+  setError: (path: string, error: string) => void
   addFile: (path: string, file: File) => void
+  forceUpload: (path: string) => void
   removeFile: (path: string) => void
 }

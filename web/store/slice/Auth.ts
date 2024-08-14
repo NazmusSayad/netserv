@@ -3,11 +3,16 @@ import { createSlice } from 'react-rtk'
 const initialState = {
   jwt: undefined as string | undefined,
   authEnabled: false,
+  readOnly: false,
 }
 
 export default createSlice('auth', {
   initialState: { ...initialState },
   actions: {
+    setReadOnly(state, readOnly: boolean) {
+      state.readOnly = readOnly
+    },
+
     login(state, jwt: string) {
       state.jwt = jwt
       state.authEnabled = true

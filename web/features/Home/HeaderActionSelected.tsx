@@ -8,6 +8,7 @@ export default function HeaderActionSelected() {
   const api = useApi()
   const location = useLocation()
   const selectedNames = useGetSelectedNames()
+  const isReadOnly = $useStore((state) => state.auth.readOnly)
 
   async function handleDelete() {
     const res = await api.post('/api/delete' + location.pathname, {
@@ -19,16 +20,15 @@ export default function HeaderActionSelected() {
   }
 
   return (
-    <>
-      <Button
-        size="small"
-        color="inherit"
-        startIcon={<VscTrash />}
-        onClick={handleDelete}
-      >
-        Delete
-      </Button>
-    </>
+    <Button
+      size="small"
+      color="inherit"
+      disabled={isReadOnly}
+      startIcon={<VscTrash />}
+      onClick={handleDelete}
+    >
+      Delete
+    </Button>
   )
 }
 

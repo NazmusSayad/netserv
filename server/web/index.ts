@@ -31,10 +31,13 @@ arg.create(
       host: t.string(),
       port: t.number().default(8000),
       qr: t.boolean().default(true),
+      writable: t.boolean().default(false).aliases('w'),
     },
   },
   ([root = '.'], options) => {
     // options.password = 'pass'
+    options.writable = true
+
     const config = {
       ...options,
       root: path.resolve(root),
@@ -62,15 +65,18 @@ arg.create(
     // Setup API router
     createSuperApiRoute('/dir', 'get', fsController.fsGetDir)
     createSuperApiRoute('/file', 'get', fsController.fsGetFile)
-    createSuperApiRoute('/rename', 'post', fsController.rename)
-    createSuperApiRoute('/delete', 'post', fsController.delete)
-    createSuperApiRoute('/new-folder', 'post', fsController.newFolder)
-    createSuperApiRoute(
-      '/upload',
-      'post',
-      multerParser.single('file'),
-      fsController.upload
-    )
+
+    if (options.writable) {
+      createSuperApiRoute('/rename', 'post', fsController.rename)
+      createSuperApiRoute('/delete', 'post', fsController.delete)
+      createSuperApiRoute('/new-folder', 'post', fsController.newFolder)
+      createSuperApiRoute(
+        '/upload',
+        'post',
+        multerParser.single('file'),
+        fsController.upload
+      )
+    }
 
     app.use('/api', apiRouter)
     app.use(

@@ -31,8 +31,13 @@ export default createGenerator(function (config: WebAppOptions) {
     init(req, res) {
       console.log('Authenticating with password:', config.authEnabled)
 
+      const configResponse = {
+        writable: config.writable,
+        authEnabled: config.authEnabled,
+      }
+
       if (!config.authEnabled) {
-        res.json({ authEnabled: config.authEnabled, jwt: null })
+        res.json({ ...configResponse, jwt: null })
       }
 
       const jwtCookie = req.cookies.jwt
@@ -55,9 +60,9 @@ export default createGenerator(function (config: WebAppOptions) {
           maxAge: 1000 * 60 * 60 * 24 * 365,
         })
 
-        res.json({ authEnabled: config.authEnabled, jwt: newJwt })
+        res.json({ ...configResponse, jwt: newJwt })
       } else {
-        res.json({ authEnabled: config.authEnabled, jwt: null })
+        res.json({ ...configResponse, jwt: null })
       }
     },
 

@@ -10,7 +10,7 @@ const initialState = {
     uploadModal: false,
     newFolderModal: false,
     refreshButtonAnimation: false,
-    renameItem: null as string | null,
+    renameItem: null as InfoChildDirWeb | InfoChildFileWeb | null,
     currentDir: null as InfoDirWeb | null,
     currentFile: null as InfoDetailedFile | null,
     rowContextMenu: null as {

@@ -29,6 +29,8 @@ function AppInit() {
     } else {
       $actions.auth.disableAuth()
     }
+
+    $actions.auth.setReadOnly(!data.writable)
   })
 
   return <Router />

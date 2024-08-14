@@ -6,7 +6,7 @@ import { getInfoDir, getInfoDirBasic, getInfoFile } from '../getInfo'
 export default createGenerator(function (config: WebAppOptions) {
   return {
     fsGetDir(req, res) {
-      const targetPath = path.join(config.root, req.path)
+      const targetPath = path.join(config.root, decodeURIComponent(req.path))
       const stats = fs.statSync(targetPath, { throwIfNoEntry: false })
       return res.json({
         dir: stats?.isDirectory() ? getInfoDir(targetPath) : null,
@@ -22,14 +22,15 @@ export default createGenerator(function (config: WebAppOptions) {
     },
 
     rename(req, res) {
-      const targetPath = path.join(config.root, req.path)
-      const newPath = path.join(config.root, req.body.newPath)
+      const targetPath = path.join(config.root, decodeURIComponent(req.path))
+      const newPath = path.join(path.dirname(targetPath), req.body.newName)
+
       fs.renameSync(targetPath, newPath)
       res.json({ success: true })
     },
 
     delete(req, res) {
-      const targetPath = path.join(config.root, req.path)
+      const targetPath = path.join(config.root, decodeURIComponent(req.path))
       const files = req.body?.names?.map((name: string) =>
         path.join(targetPath, name)
       )
@@ -46,9 +47,17 @@ export default createGenerator(function (config: WebAppOptions) {
     },
 
     upload(req, res) {
-      const filePath = path.join(config.root, req.path, req.body.path)
-      const fileDirPath = path.dirname(filePath)
+      const filePath = path.join(
+        config.root,
+        decodeURIComponent(req.path),
+        req.body.path
+      )
 
+      if (req.body.force === 'false' && fs.existsSync(filePath)) {
+        return res.status(400).json({ error: 'File already exists' })
+      }
+
+      const fileDirPath = path.dirname(filePath)
       if (!fs.existsSync(fileDirPath)) {
         fs.mkdirSync(fileDirPath, { recursive: true })
       }

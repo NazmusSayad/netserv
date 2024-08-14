@@ -135,8 +135,6 @@ const TableItem = ({
       ? fileSupport(data.ext)?.IconComponent || FcFile
       : FcFolder
 
-  const renameItem = $useStore((state) => state.homeui.status.renameItem)
-
   return (
     <Row
       key={data.name}
@@ -164,13 +162,7 @@ const TableItem = ({
 
       <div className={'flex items-center gap-1'}>
         <Icon />
-        <div className={'max-h-[1.5rem] overflow-hidden'}>
-          {renameItem ? (
-            <input type="text" value={data.name} className={'bg-transparent'} />
-          ) : (
-            data.name
-          )}
-        </div>
+        <div className={'max-h-[1.5rem] overflow-hidden'}>{data.name}</div>
       </div>
 
       <span className={'opacity-80 text-sm'}>

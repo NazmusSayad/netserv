@@ -8,11 +8,13 @@ import { MdUploadFile, MdOutlineCreateNewFolder } from 'react-icons/md'
 
 export default function HeaderActionMenu() {
   const matches = useCssQuery('(max-width: 28rem)')
+  const isReadOnly = $useStore((state) => state.auth.readOnly)
 
   const data = useMemo(() => {
     return [
       {
         label: 'Upload',
+        disabled: isReadOnly,
         icon: <MdUploadFile />,
         onClick: () => {
           $actions.homeui.setState({ uploadModal: true })
@@ -21,13 +23,14 @@ export default function HeaderActionMenu() {
 
       {
         label: 'New Folder',
+        disabled: isReadOnly,
         icon: <MdOutlineCreateNewFolder />,
         onClick: () => {
           $actions.homeui.setState({ newFolderModal: true })
         },
       },
     ]
-  }, [])
+  }, [isReadOnly])
 
   return matches ? <DropdownMenu data={data} /> : <LineMenu data={data} />
 }
@@ -38,6 +41,7 @@ const LineMenu = ({ data }: { data: ButtonData }) => {
       key={index}
       size="small"
       color="inherit"
+      disabled={item.disabled}
       startIcon={item.icon}
       onClick={item.onClick}
     >
@@ -79,6 +83,7 @@ const DropdownMenu = ({ data }: { data: ButtonData }) => {
         {data.map((item, index) => (
           <MenuItem
             key={index}
+            disabled={item.disabled}
             onClick={() => {
               handleClose()
               item.onClick()
@@ -98,5 +103,6 @@ const DropdownMenu = ({ data }: { data: ButtonData }) => {
 type ButtonData = {
   label: string
   icon: JSX.Element
+  disabled?: boolean
   onClick: () => void
 }[]

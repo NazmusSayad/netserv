@@ -9,7 +9,7 @@ export type WebAppOptions = {
   password?: string
   host?: string
   qr: boolean
-
+  writable: boolean
   authEnabled: boolean
 }
 
