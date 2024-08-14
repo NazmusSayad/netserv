@@ -32,7 +32,7 @@ export default createGenerator(function (config: WebAppOptions) {
       }
 
       if (!config.authEnabled) {
-        res.json({ ...configResponse, jwt: null })
+        return res.json({ ...configResponse, jwt: null })
       }
 
       const jwtCookie = req.cookies.jwt

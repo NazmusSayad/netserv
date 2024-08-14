@@ -15,8 +15,7 @@ export default function HeaderActionSelected() {
       names: selectedNames,
     })
 
-    if (!res.ok) return console.log(res)
-    $actions.homeui.deleteItems(selectedNames)
+    if (res.ok) $actions.homeui.deleteItems(selectedNames)
   }
 
   return (

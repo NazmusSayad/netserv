@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react'
 import { MdFolderOpen, MdFileOpen, MdUpload, MdClose } from 'react-icons/md'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { RiRefreshLine } from 'react-icons/ri'
+import useFileDrop from './useFileDrop'
+import { RiDragDropLine } from 'react-icons/ri'
 
 export default function UploadModal() {
   const navigate = useNavigate()
@@ -93,6 +95,7 @@ function UploadModalCore({
 }) {
   const api = useApi()
   const location = useLocation()
+  const fileDrop = useFileDrop(addFile)
 
   async function startUpload() {
     let hasError = false
@@ -121,7 +124,11 @@ function UploadModalCore({
   }
 
   return (
-    <div className={'grid auto-rows-[1fr_auto] h-full'}>
+    <div
+      onDrop={fileDrop.handleDrop}
+      onDragOver={fileDrop.handleDragOver}
+      className={'grid auto-rows-[1fr_auto] h-full'}
+    >
       <div className={'overflow-auto py-2'}>
         {files.map(({ path, file, error, force }, index) => (
           <div
@@ -161,6 +168,20 @@ function UploadModalCore({
             </div>
           </div>
         ))}
+
+        {files.length === 0 && (
+          <div className={'flex flex-col items-center h-full w-full'}>
+            <div className={'w-full m-auto text-center'}>
+              <div className={'mb-6'}>
+                <RiDragDropLine className={'size-[30%] m-auto text-white/30'} />
+              </div>
+
+              <p className={'text-white/70'}>
+                Drag and drop files or folders here
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       <ModalBottomActions
@@ -183,46 +204,8 @@ function ModalBottomActions({
   return (
     <div className={'flex justify-between items-center py-2 px-4'}>
       <div>
-        <input
-          hidden
-          multiple
-          type="file"
-          {...{ directory: '', webkitdirectory: '', mozdirectory: '' }}
-          onChange={(e) => {
-            const files = [...e.target.files!]
-            files.forEach((file) =>
-              addFile(file.webkitRelativePath ?? file.name, file)
-            )
-            e.target.value = ''
-          }}
-        />
-
-        <Button
-          disabled={Boolean(currentLoading)}
-          startIcon={<MdFolderOpen style={{ marginTop: '-0.1rem' }} />}
-          onClick={(e: any) => e.target.previousElementSibling.click()}
-        >
-          Choose Folders
-        </Button>
-
-        <input
-          hidden
-          multiple
-          type="file"
-          onChange={(e) => {
-            const files = [...e.target.files!]
-            files.forEach((file) => addFile(file.name, file))
-            e.target.value = ''
-          }}
-        />
-
-        <Button
-          disabled={Boolean(currentLoading)}
-          startIcon={<MdFileOpen style={{ marginTop: '-0.1rem' }} />}
-          onClick={(e: any) => e.target.previousElementSibling.click()}
-        >
-          Choose Files
-        </Button>
+        <InputFile addFile={addFile} disabled={Boolean(currentLoading)} />
+        <InputFolder addFile={addFile} disabled={Boolean(currentLoading)} />
       </div>
 
       <div>
@@ -236,6 +219,65 @@ function ModalBottomActions({
         </Button>
       </div>
     </div>
+  )
+}
+
+function InputFolder({
+  addFile,
+  disabled,
+}: Pick<FilesProp, 'addFile'> & { disabled?: boolean; hidden?: boolean }) {
+  return (
+    <>
+      <input
+        hidden
+        multiple
+        type="file"
+        {...{ directory: '', webkitdirectory: '', mozdirectory: '' }}
+        onChange={(e) => {
+          const files = [...e.target.files!]
+          files.forEach((file) =>
+            addFile(file.webkitRelativePath ?? file.name, file)
+          )
+          e.target.value = ''
+        }}
+      />
+
+      <Button
+        disabled={disabled}
+        startIcon={<MdFolderOpen style={{ marginTop: '-0.1rem' }} />}
+        onClick={(e: any) => e.target.previousElementSibling.click()}
+      >
+        Choose Folders
+      </Button>
+    </>
+  )
+}
+
+function InputFile({
+  addFile,
+  disabled,
+}: Pick<FilesProp, 'addFile'> & { disabled?: boolean }) {
+  return (
+    <>
+      <input
+        hidden
+        multiple
+        type="file"
+        onChange={(e) => {
+          const files = [...e.target.files!]
+          files.forEach((file) => addFile(file.name, file))
+          e.target.value = ''
+        }}
+      />
+
+      <Button
+        disabled={disabled}
+        startIcon={<MdFileOpen style={{ marginTop: '-0.1rem' }} />}
+        onClick={(e: any) => e.target.previousElementSibling.click()}
+      >
+        Choose Files
+      </Button>
+    </>
   )
 }
 

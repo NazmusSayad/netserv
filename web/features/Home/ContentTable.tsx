@@ -158,7 +158,9 @@ const TableItem = ({
       />
 
       <div className={'flex items-center gap-1'}>
-        <Icon />
+        <div>
+          <Icon />
+        </div>
         <div className={'max-h-[1.5rem] overflow-hidden break-all'}>
           {data.name}
         </div>
