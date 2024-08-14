@@ -8,6 +8,6 @@ export const customExtrass = createExtrass({})
 export const app = express()
 
 app.use(cors({ origin: /.*/, credentials: true }))
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+// app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 app.use(cookie())
 app.use(express.json())
