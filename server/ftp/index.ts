@@ -3,18 +3,17 @@ import { t } from 'noarg'
 import arg from '../arg'
 import server from './server'
 
-arg.create(
-  'ftp',
-  {
-    options: {
+arg
+  .create('ftp', {
+    flags: {
       host: t.string().aliases('h'),
       port: t.number().aliases('p').default(2221),
       username: t.string().aliases('user'),
       password: t.string().aliases('pass'),
       root: t.string().default('.'),
     },
-  },
-  (_, options) => {
+  })
+  .on((_, options) => {
     if (options.username && !options.password) {
       throw new Error('Password is required if username is provided')
     }
@@ -39,11 +38,10 @@ arg.create(
       const networks = os.networkInterfaces()
       for (const name in networks) {
         const network = networks[name]?.find(
-          (network) => network.family === 'IPv4'
+          (network: any) => network.family === 'IPv4'
         )
 
         if (network) startServer(network.address)
       }
     }
-  }
-)
+  })

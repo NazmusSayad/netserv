@@ -7,4 +7,4 @@ import './send'
 import './ftp'
 import './web'
 
-arg.run()
+arg.start()

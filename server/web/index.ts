@@ -16,28 +16,24 @@ import generateFsController from './controller/fs'
 import generateAuthController from './controller/auth'
 import multer = require('multer')
 
-arg.create(
-  'web',
-  {
+arg
+  .create('web', {
     description: 'Creates a http server',
-    listArgument: {
-      name: 'Target Dir',
-      description: 'The directory to serve',
-      type: t.string(),
-      maxLength: 1,
-    },
-    options: {
+    optionalArguments: [
+      {
+        name: 'Target Dir',
+        type: t.string().description('The directory to serve'),
+      },
+    ],
+    flags: {
       password: t.string(),
       host: t.string(),
       port: t.number().default(8000),
       qr: t.boolean().default(true),
       writable: t.boolean().default(false).aliases('w'),
     },
-  },
-  ([root = '.'], options) => {
-    // options.password = 'pass'
-    options.writable = true
-
+  })
+  .on(([root = '.'], options) => {
     const config = {
       ...options,
       root: path.resolve(root),
@@ -129,5 +125,4 @@ arg.create(
         }
       }
     })()
-  }
-)
+  })

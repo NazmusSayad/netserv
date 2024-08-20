@@ -2,9 +2,8 @@ import { t } from 'noarg'
 import arg from '../arg'
 import send from './sender'
 
-arg.create(
-  'send',
-  {
+arg
+  .create('send', {
     description: 'This sends file to the server',
     arguments: [
       {
@@ -18,22 +17,22 @@ arg.create(
         description: 'Port of the server',
       },
     ],
+
     listArgument: {
       name: 'target',
       type: t.string(),
       description: 'Path to the file or folder',
     },
 
-    options: {
+    flags: {
       code: t.number(),
     },
-  },
-  ([host, port, ...targets], options) => {
+  })
+  .on(([host, port, targets], options) => {
     send({
       host,
       port,
       targets,
       code: options.code,
     })
-  }
-)
+  })
