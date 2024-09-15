@@ -1,4 +1,4 @@
-import { t } from 'noarg'
+import NoArg from 'noarg'
 import arg from '../arg'
 import send from './sender'
 
@@ -8,24 +8,24 @@ arg
     arguments: [
       {
         name: 'host',
-        type: t.string(),
+        type: NoArg.string(),
         description: 'Host of the server',
       },
       {
         name: 'port',
-        type: t.number(),
+        type: NoArg.number(),
         description: 'Port of the server',
       },
     ],
 
     listArgument: {
       name: 'target',
-      type: t.string(),
+      type: NoArg.string(),
       description: 'Path to the file or folder',
     },
 
     flags: {
-      code: t.number(),
+      code: NoArg.number(),
     },
   })
   .on(([host, port, targets], options) => {

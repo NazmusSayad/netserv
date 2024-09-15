@@ -1,4 +1,4 @@
-import NoArg, { t } from 'noarg'
+import NoArg from 'noarg'
 
 const app = NoArg.create('app', {
   description:

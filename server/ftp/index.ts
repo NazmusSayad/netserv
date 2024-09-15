@@ -1,16 +1,16 @@
 import * as os from 'os'
-import { t } from 'noarg'
 import arg from '../arg'
 import server from './server'
+import NoArg from 'noarg'
 
 arg
   .create('ftp', {
     flags: {
-      host: t.string().aliases('h'),
-      port: t.number().aliases('p').default(2221),
-      username: t.string().aliases('user'),
-      password: t.string().aliases('pass'),
-      root: t.string().default('.'),
+      host: NoArg.string().aliases('h'),
+      port: NoArg.number().aliases('p').default(2221),
+      username: NoArg.string().aliases('user'),
+      password: NoArg.string().aliases('pass'),
+      root: NoArg.string().default('.'),
     },
   })
   .on((_, options) => {

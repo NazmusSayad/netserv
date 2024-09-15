@@ -1,17 +1,17 @@
-import { t } from 'noarg'
+import {
+  apiRouter,
+  authRouter,
+  staticRouter,
+  createSuperApiRoute,
+} from './router'
 import * as os from 'os'
+import arg from '../arg'
+import NoArg from 'noarg'
 import * as path from 'path'
 import * as qrcode from 'qrcode'
 import * as express from 'express'
 import { catchError } from 'extrass'
-import arg from '../arg'
 import { app, customExtrass } from './express'
-import {
-  apiRouter,
-  authRouter,
-  createSuperApiRoute,
-  staticRouter,
-} from './router'
 import generateFsController from './controller/fs'
 import generateAuthController from './controller/auth'
 import multer = require('multer')
@@ -22,15 +22,15 @@ arg
     optionalArguments: [
       {
         name: 'Target Dir',
-        type: t.string().description('The directory to serve'),
+        type: NoArg.string().description('The directory to serve'),
       },
     ],
     flags: {
-      password: t.string(),
-      host: t.string(),
-      port: t.number().default(8000),
-      qr: t.boolean().default(true),
-      writable: t.boolean().default(false).aliases('w'),
+      password: NoArg.string(),
+      host: NoArg.string(),
+      port: NoArg.number().default(8000),
+      qr: NoArg.boolean().default(true),
+      writable: NoArg.boolean().default(false).aliases('w'),
     },
   })
   .on(([root = '.'], options) => {
