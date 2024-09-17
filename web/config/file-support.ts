@@ -6,13 +6,11 @@ import {
 } from 'react-icons/fc'
 import { lazy } from 'react'
 import { IconType } from 'react-icons'
-const Image = lazy(() => import('@/features/View/Image'))
-const Text = lazy(() => import('@/features/View/Text'))
 
 const fileGroup: Record<string, FileSupport> = {
   Image: {
     IconComponent: FcImageFile,
-    ViewComponent: Image as ViewComponent,
+    ViewComponent: lazy(() => import('@/features/View/Image')) as ViewComponent,
     extensions: new Set([
       'jpg',
       'jpeg',
@@ -28,6 +26,7 @@ const fileGroup: Record<string, FileSupport> = {
 
   Audio: {
     IconComponent: FcAudioFile,
+    ViewComponent: lazy(() => import('@/features/View/Audio')) as ViewComponent,
     extensions: new Set([
       'mp3',
       'wav',
@@ -43,6 +42,7 @@ const fileGroup: Record<string, FileSupport> = {
 
   Video: {
     IconComponent: FcVideoFile,
+    ViewComponent: lazy(() => import('@/features/View/Video')) as ViewComponent,
     extensions: new Set([
       'mp4',
       'mkv',
@@ -59,7 +59,7 @@ const fileGroup: Record<string, FileSupport> = {
 
   Text: {
     IconComponent: FcDocument,
-    ViewComponent: Text as ViewComponent,
+    ViewComponent: lazy(() => import('@/features/View/Text')) as ViewComponent,
     extensions: new Set([
       'txt',
       'js',
