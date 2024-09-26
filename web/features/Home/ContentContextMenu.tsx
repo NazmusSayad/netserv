@@ -27,9 +27,8 @@ export default function ContentContextMenu() {
       {
         label: 'Open in new Tab',
         icon: <ImNewTab />,
-        disabled: contextMenu?.item.type !== 'dir',
         onClick() {
-          window.open(location.href + '/' + contextMenu?.item.name!)
+          window.open(getFsUrl(locationReact.pathname, contextMenu?.item.name!))
         },
       },
       {

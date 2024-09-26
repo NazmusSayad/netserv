@@ -19,8 +19,8 @@ const reactHTTP = ReactHTTP({
 })
 
 export function getFsUrl(pathname: string, name: string) {
-  const names = ['fs', ...pathname.split('/'), name].filter(Boolean)
-  return url + names.join('/')
+  const names = [...pathname.split('/'), name].filter(Boolean)
+  return [url + 'fs', encodeURIComponent(names.join('/'))].join('/')
 }
 
 export const { useApi, useApiOnce, createSuspense } = reactHTTP

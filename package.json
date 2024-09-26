@@ -1,6 +1,6 @@
 {
   "name": "netserv",
-  "version": "3.0.17",
+  "version": "3.0.18",
   "type": "commonjs",
   "bin": "./dist/server/index.js",
   "scripts": {
@@ -11,15 +11,15 @@
     "build-server": "tsc -p ./server",
     "build-web": "tsc -p ./web && vite build ./web --emptyOutDir",
     "lab-run": "node --watch ./dist/server __lab.js",
-    "web-run": "node --watch ./dist/server web D:\\Sayad\\Videos\\ACI --qr\\",
+    "web-run": "node --watch ./dist/server web D:\\Sayad\\Videos --qr\\",
     "ftp-run": "node --watch ./dist/server ftp",
     "get-run": "node --watch ./dist/server get",
     "send-run": "node --watch ./dist/server send",
-    "lab": "rp dev-server lab-run",
-    "web": "rp dev-server web-run",
-    "ftp": "rp dev-server ftp-run",
-    "get": "rp dev-server get-run",
-    "send": "rp dev-server send-run"
+    "lab": "run-p dev-server lab-run",
+    "web": "run-p dev-server web-run",
+    "ftp": "run-p dev-server ftp-run",
+    "get": "run-p dev-server get-run",
+    "send": "run-p dev-server send-run"
   },
   "dependencies": {
     "axios": "^1.7.7",
