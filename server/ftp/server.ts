@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as bunyan from 'bunyan'
 import { FtpSrv } from 'ftp-srv'
+import EventEmitter = require('events')
 
 type FTPConfig = {
   host: string
@@ -11,13 +12,25 @@ type FTPConfig = {
   password?: string
 }
 
-export default function (config: FTPConfig) {
+export default async function (config: FTPConfig) {
   const url = `ftp://${config.host}:${config.port}`
   const ftpServer = new FtpSrv({
     url,
     anonymous: !(config.username || config.password),
     log: bunyan.createLogger({ name: 'ftp-server', level: 'fatal' }),
   })
+
+  try {
+    await ftpServer.listen()
+    console.log(`FTP server running at: ${url}`)
+  } catch (err) {
+    console.log(`FTP server failed to start at: ${url}`)
+
+    ftpServer.removeAllListeners()
+    ftpServer.close()
+
+    throw err
+  }
 
   ftpServer.on(
     'login',
@@ -37,8 +50,4 @@ export default function (config: FTPConfig) {
       resolve({ root: rootDir })
     }
   )
-
-  ftpServer.listen().then(() => {
-    console.log(`FTP server running at: ${url}`)
-  })
 }

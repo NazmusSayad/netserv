@@ -23,17 +23,24 @@ arg
     }
 
     function startServer(host: string) {
-      server({
+      const config = {
         host,
         port: options.port,
         root: options.root,
         username: options.username,
         password: options.password,
+      }
+
+      server(config).catch(async () => {
+        console.error('Retrying in 1 second...')
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+        startServer(host)
       })
     }
 
     if (options.host) {
-      startServer(options.host)
+      const host = options.host
+      startServer(host)
     } else {
       const networks = os.networkInterfaces()
       for (const name in networks) {
@@ -41,7 +48,10 @@ arg
           (network: any) => network.family === 'IPv4'
         )
 
-        if (network) startServer(network.address)
+        if (network) {
+          const host = network.address
+          startServer(host)
+        }
       }
     }
   })
