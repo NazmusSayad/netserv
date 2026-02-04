@@ -30,6 +30,10 @@ spawn(
     'bun',
     '--outfile',
     'netserv.exe',
+    '--windows-title',
+    'NetServ',
+    '--windows-description',
+    'NetServ - A simple file transfer server',
   ],
   { stdio: 'inherit' }
 )
